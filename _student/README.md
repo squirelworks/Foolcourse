@@ -1,6 +1,7 @@
 # _student/
 
-One file per student. The file is `.fcs`.
+One file per student. FCS is Foolcourse Student. The file is `.fcs`.
+The standard is `progress/FCS.md`.
 
 On disk it is encrypted. Extracted, it is this JSON:
 
