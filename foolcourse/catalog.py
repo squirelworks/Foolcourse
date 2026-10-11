@@ -1,13 +1,17 @@
 """Build a course catalog from a directory, optionally with courses.xml.
 
-A course is official (counts toward the overall score) when either:
+A deployment has an official course list. A course on that list counts
+toward the overall score. Anything else is extra material: it is listed,
+it can be opened, and it keeps its own score, but it is not added into
+the overall.
+
+ATT is the first official list. A course is on it when either:
 
 - it lives under a folder named 03_ATT_Master (or an alias), or
 - its lesson id is in the ATT Master menu of a courses.xml
   (courseid 0_MASTER3 / title ATT Master_3).
 
-Every other course is listed and can be scored on its own. It is not
-added into the overall.
+A later deployment names its own list. The rule does not change.
 """
 
 from __future__ import annotations
