@@ -96,7 +96,8 @@ class Progress:
         rec = self._ensure(course_id)
         rec["opened"] = True
         today = date.today().isoformat()
-        self.data.setdefault("started", today)
+        if not self.data.get("started"):
+            self.data["started"] = today
         self.data["last_seen"] = today
         self._save()
 
