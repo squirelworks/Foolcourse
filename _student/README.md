@@ -1,9 +1,8 @@
 # _student/
 
-One file per student. Plain JSON. No lock, no password. A later module
-can make this secure. For now it is the record Foolcourse and Foolbook share.
+One file per student. The file is `.fcs`.
 
-Default student is `student.json`. `--student alex` uses `alex.json`.
+On disk it is encrypted. Extracted, it is this JSON:
 
 ```json
 {
@@ -13,4 +12,8 @@ Default student is `student.json`. `--student alex` uses `alex.json`.
 }
 ```
 
-`courses` is the progress and score store: opened, last page, quiz answers.
+Without the password the file cannot be extracted. This cut uses a
+fixed password. A later module can replace it.
+
+Default student is `student.fcs`. `--student alex` uses `alex.fcs`.
+`courses` holds that student's progress and scores.

@@ -3,8 +3,9 @@
 The viewer records visited pages, the last page, and quiz answers.
 Foolcourse reads the same file to show progress and scores.
 
-Stored as the current student file under _student/. Default is
-_student/student.json. Plain JSON for now; a later module can lock it down.
+Stored as an encrypted .fcs under _student/. Default is
+_student/student.fcs. Extracted, it is JSON. On disk it needs the
+password. A later module can replace that password.
 
 Score model
 -----------
@@ -21,6 +22,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from progress.fcs import pack, unpack
+
 
 def student_dir() -> Path:
     """Folder that holds student files."""
@@ -31,19 +34,19 @@ def student_dir() -> Path:
 
 
 def student_path(name: str = "student") -> Path:
-    """Path for a student. A bare name lives in _student/. A path is used as given."""
+    """Path for a student. A bare name is _student/<name>.fcs."""
     raw = (name or "student").strip()
     path = Path(raw)
-    if path.suffix.lower() == ".json" or "/" in raw or raw.startswith("."):
+    if path.suffix.lower() in (".json", ".fcs") or "/" in raw or raw.startswith("."):
         path = path.expanduser()
         if not path.is_absolute():
             path = student_dir().parent / path
         return path
-    return student_dir() / f"{raw}.json"
+    return student_dir() / f"{raw}.fcs"
 
 
 def default_path() -> Path:
-    """The student file Foolcourse and the viewer share. Default student."""
+    """The student file Foolcourse and the viewer share."""
     return student_path("student")
 
 
@@ -53,7 +56,7 @@ class Progress:
         self.data: dict = self._blank()
         if self.path.exists():
             try:
-                self.data = json.loads(self.path.read_text(encoding="utf-8"))
+                self.data = self._read()
             except Exception:
                 self.data = self._blank()
         self._normalize()
@@ -61,10 +64,22 @@ class Progress:
     def reload(self) -> None:
         if self.path.exists():
             try:
-                self.data = json.loads(self.path.read_text(encoding="utf-8"))
+                self.data = self._read()
             except Exception:
                 return
         self._normalize()
+
+    def label(self, course_id: str) -> str:
+        """Short progress text for the catalog."""
+        rec = self._rec(course_id)
+        if rec.get("completed"):
+            return "done"
+        n = len(rec.get("visited") or [])
+        if n:
+            return f"{n} pages"
+        if rec.get("opened"):
+            return "opened"
+        return ""
 
     def status(self, course_id: str) -> str:
         rec = self._rec(course_id)
@@ -192,7 +207,16 @@ class Progress:
         self.data.setdefault("name", str(self.data.get("id") or "Student"))
         self.data.setdefault("courses", {})
 
+    def _read(self) -> dict:
+        blob = self.path.read_bytes()
+        if self.path.suffix.lower() == ".fcs" or blob[:4] == b"FCS1":
+            return unpack(blob)
+        return json.loads(blob.decode("utf-8"))
+
     def _save(self) -> None:
         self._normalize()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, indent=2) + "\n", encoding="utf-8")
+        if self.path.suffix.lower() == ".fcs":
+            self.path.write_bytes(pack(self.data))
+        else:
+            self.path.write_text(json.dumps(self.data, indent=2) + "\n", encoding="utf-8")

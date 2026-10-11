@@ -3,5 +3,7 @@ __pycache__/
 progress/progress.json
 
 # live student records; the example stays
-_student/*.json
-!_student/example.student.json
+
+# live student records; the example stays
+_student/*.fcs
+!_student/example.student.fcs

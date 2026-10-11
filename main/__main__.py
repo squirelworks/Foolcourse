@@ -6,7 +6,7 @@
   python3 -m foolcourse --list path/to/courses  # print, no window
   python3 -m foolcourse --debug                 # show course id and track
   python3 -m foolcourse --theme modern          # quieter controls, not Win95
-  python3 -m foolcourse --student alex          # _student/alex.json
+  python3 -m foolcourse --student alex          # _student/alex.fcs
 """
 
 from __future__ import annotations
