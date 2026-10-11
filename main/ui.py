@@ -66,6 +66,7 @@ class Catalog:
         self.xml_path = Path(xml_path) if xml_path else None
         self.curriculum_path = Path(curriculum) if curriculum else None
         self.port = port
+        self._viewer = None
         self.debug = debug
         self.locale = locale or "en"
         self.curriculum: dict | None = None
@@ -376,6 +377,36 @@ class Catalog:
         idx = self.course_tree.index(sel[0])
         return self.course_rows[idx] if 0 <= idx < len(self.course_rows) else None
 
+
+    def _port_free(self) -> bool:
+        import socket
+        s = socket.socket()
+        try:
+            s.bind(("127.0.0.1", self.port))
+            return True
+        except OSError:
+            return False
+        finally:
+            s.close()
+
+    def _stop_viewer(self) -> bool:
+        """Stop the viewer we started. False if the port is held by someone else."""
+        proc = getattr(self, "_viewer", None)
+        if proc is None or proc.poll() is not None:
+            return False
+        proc.terminate()
+        try:
+            proc.wait(timeout=3)
+        except Exception:
+            proc.kill()
+        self._viewer = None
+        for _ in range(20):
+            if self._port_free():
+                return True
+            import time
+            time.sleep(0.1)
+        return self._port_free()
+
     def _launch(self):
         row = self._selected()
         if not row:
@@ -400,16 +431,18 @@ class Catalog:
             "--course", cid,
             path,
         ]
-        subprocess.Popen(cmd)
         url = f"http://127.0.0.1:{self.port}/"
-        self.status.config(text=t(self.locale, "opened", url=url) if False else f"Course at {url}")
-        # Open from this process. The Foolbook child also tries, and that
-        # open fails on some desktops (Chrome zygote broken pipe).
-        try:
-            import webbrowser
-            webbrowser.open(url, new=2)
-        except Exception:
-            pass
+        if not self._port_free():
+            # A viewer is already up. If we started it, replace it with
+            # this course. If we did not, say so and do not spawn another.
+            if not self._stop_viewer():
+                messagebox.showinfo(
+                    t(self.locale, "app"),
+                    f"A viewer is already on port {self.port}.\nClose it, or finish the open course.",
+                )
+                return
+        self._viewer = subprocess.Popen(cmd)
+        self.status.config(text=f"Course at {url}")
 
 
 
