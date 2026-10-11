@@ -5,6 +5,8 @@
   python3 -m foolcourse path/to/courses --xml courses.xml
   python3 -m foolcourse --list path/to/courses  # print, no window
   python3 -m foolcourse --debug                 # show course id and track
+  python3 -m foolcourse --theme modern          # quieter controls, not Win95
+  python3 -m foolcourse --student alex          # _student/alex.json
 """
 
 from __future__ import annotations
@@ -18,7 +20,7 @@ if str(_root) not in sys.path:
 
 from main.catalog import official_ids, scan
 from main.curriculum import apply, load as load_curriculum
-from progress.progress import Progress, default_path
+from progress.progress import Progress, default_path, student_path
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -29,6 +31,8 @@ def main(argv: list[str] | None = None) -> int:
     xml_path = None
     curriculum_path = None
     port = 1337
+    theme = "classic"
+    student = None
     rest: list[str] = []
     i = 0
     while i < len(argv):
@@ -44,6 +48,15 @@ def main(argv: list[str] | None = None) -> int:
             i += 1
         elif a == "--curriculum" and i + 1 < len(argv):
             curriculum_path = Path(argv[i + 1])
+            i += 1
+        elif a == "--theme" and i + 1 < len(argv):
+            theme = argv[i + 1].strip().lower()
+            if theme not in ("classic", "modern"):
+                print("--theme is classic or modern")
+                return 2
+            i += 1
+        elif a == "--student" and i + 1 < len(argv):
+            student = argv[i + 1]
             i += 1
         elif a == "--port" and i + 1 < len(argv):
             try:
@@ -65,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
     if making:
         from main.curriculum import Maker
         out = Path(rest[1]) if len(rest) > 1 else _curriculum_dir() / "curriculum.json"
-        Maker(root, xml_path, out)
+        Maker(root, xml_path, out, theme=theme)
         return 0
     catalog = scan(root, xml_path)
     curriculum = None
@@ -73,9 +86,9 @@ def main(argv: list[str] | None = None) -> int:
         curriculum = load_curriculum(curriculum_path)
         apply(catalog, curriculum)
     if listing:
-        return _print(catalog, curriculum, debug=debug)
+        return _print(catalog, curriculum, debug=debug, student=student)
     from main.ui import Catalog
-    Catalog(root, xml_path, curriculum_path, port, debug=debug)
+    Catalog(root, xml_path, curriculum_path, port, student, theme)
     return 0
 
 
@@ -111,8 +124,8 @@ def _default_curriculum() -> Path | None:
     return files[0] if files else None
 
 
-def _print(catalog: dict, curriculum: dict | None = None, debug: bool = False) -> int:
-    progress = Progress(default_path())
+def _print(catalog: dict, curriculum: dict | None = None, debug: bool = False, student: str | None = None) -> int:
+    progress = Progress(student_path(student) if student else default_path())
     official = official_ids(catalog)
     n = 0
     for sub in catalog.get("subjects") or []:

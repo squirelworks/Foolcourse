@@ -8,7 +8,8 @@ The package lives in main/.
   python3 foolcourse.py                         # catalog _courses/
   python3 foolcourse.py path/to/courses         # catalog that folder
   python3 foolcourse.py path/to/courses --xml courses.xml
-  python3 foolcourse.py --list path/to/courses  # print, no window
+  python3 foolcourse.py --theme modern          # not the Win95 look
+python3 foolcourse.py --list path/to/courses  # print, no window
   python3 foolcourse.py --make path/to/courses  # curriculum maker
   python3 foolcourse.py --student alex        # _student/alex.json
 python3 foolcourse.py --port 8080             # viewer port, default 1337

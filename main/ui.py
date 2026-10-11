@@ -47,17 +47,58 @@ def _find_foolbook() -> Path | None:
 
 
 
-def _row_style(root):
-    """Give list rows enough height for the font. The theme default clips them."""
+def _row_style(root, theme: str = "classic"):
+    """Size the rows, and apply a modern theme when asked.
+
+    classic is the platform ttk look. modern is clam with quieter colors
+    for people who do not want the Win95 controls.
+    """
     import tkinter.font as tkfont
     style = ttk.Style(root)
-    font = tkfont.nametofont("TkDefaultFont")
-    height = font.metrics("linespace") + 10
+    base = tkfont.nametofont("TkDefaultFont")
+    if theme == "modern":
+        for name in ("Segoe UI", "Ubuntu", "DejaVu Sans", "Helvetica"):
+            try:
+                font = tkfont.Font(root=root, family=name, size=11)
+                font.measure("x")
+                break
+            except Exception:
+                font = base
+        else:
+            font = base
+        _modern(style, root, font)
+    else:
+        font = base
+    height = font.metrics("linespace") + (12 if theme == "modern" else 10)
     style.configure("Treeview", rowheight=height, font=font)
-    style.configure("Treeview.Heading", font=font, padding=(4, 6))
+    style.configure("Treeview.Heading", font=font, padding=(6, 8) if theme == "modern" else (4, 6))
+
+
+def _modern(style, root, font):
+    """A quiet light theme. clam underneath, so it is not the Win95 set."""
+    try:
+        style.theme_use("clam")
+    except Exception:
+        pass
+    bg = "#f6f3ee"
+    fg = "#1c1917"
+    muted = "#e6e1d8"
+    line = "#d4cec3"
+    accent = "#1d4e89"
+    root.configure(background=bg)
+    style.configure(".", background=bg, foreground=fg, font=font)
+    style.configure("TFrame", background=bg)
+    style.configure("TLabel", background=bg, foreground=fg, font=font)
+    style.configure("TButton", background=muted, foreground=fg, padding=(12, 6), borderwidth=0, font=font)
+    style.map("TButton", background=[("active", "#ddd6cb"), ("pressed", line)])
+    style.configure("Treeview", background="#fffcf7", fieldbackground="#fffcf7", foreground=fg, borderwidth=0)
+    style.configure("Treeview.Heading", background=muted, foreground=fg, borderwidth=0)
+    style.map("Treeview", background=[("selected", accent)], foreground=[("selected", "#fffcf7")])
+    style.configure("Vertical.TScrollbar", background=muted, troughcolor=bg, borderwidth=0, arrowsize=12)
+    style.configure("Horizontal.TScrollbar", background=muted, troughcolor=bg, borderwidth=0, arrowsize=12)
 
 class Catalog:
-    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337, student: str | None = None):
+    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337, student: str | None = None, theme: str = "classic"):
         if tk is None:
             print("Tkinter is required for the Foolcourse window.")
             raise SystemExit(1)
@@ -75,7 +116,7 @@ class Catalog:
         self.root.title("Foolcourse")
         self.root.geometry("1040x560")
         self.root.minsize(720, 360)
-        _row_style(self.root)
+        _row_style(self.root, theme)
         self._build()
         self._reload()
         self.root.mainloop()

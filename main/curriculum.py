@@ -116,7 +116,7 @@ def _row_style(root):
 class Maker:
     """Window to mark courses official or extra and save a curriculum."""
 
-    def __init__(self, root: Path, xml_path: Path | None = None, out: Path | None = None):
+    def __init__(self, root: Path, xml_path: Path | None = None, out: Path | None = None, theme: str = "classic"):
         try:
             import tkinter as tk
             from tkinter import ttk, messagebox, simpledialog
@@ -138,7 +138,11 @@ class Maker:
         self.root.title("Curriculum maker")
         self.root.geometry("980x560")
         self.root.minsize(720, 360)
-        _row_style(self.root)
+        if theme == "modern":
+            from main.ui import _row_style as _modern_style
+            _modern_style(self.root, "modern")
+        else:
+            _row_style(self.root)
         self._build()
         self._fill()
         self.root.mainloop()
