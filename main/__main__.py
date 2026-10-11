@@ -1,6 +1,6 @@
 """Foolcourse entry.
 
-  python3 -m foolcourse                         # catalog _courses/
+  python3 -m foolcourse                         # _courses/ with _curriculum/
   python3 -m foolcourse path/to/courses         # catalog that folder
   python3 -m foolcourse path/to/courses --xml courses.xml
   python3 -m foolcourse --list path/to/courses  # print, no window
@@ -45,9 +45,11 @@ def main(argv: list[str] | None = None) -> int:
         i += 1
 
     root = Path(rest[0]) if rest else _default_root()
+    if curriculum_path is None:
+        curriculum_path = _default_curriculum()
     if making:
         from main.curriculum import Maker
-        out = Path(rest[1]) if len(rest) > 1 else root / "curriculum.json"
+        out = Path(rest[1]) if len(rest) > 1 else _curriculum_dir() / "curriculum.json"
         Maker(root, xml_path, out)
         return 0
     catalog = scan(root, xml_path)
@@ -62,13 +64,36 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
+def _here() -> Path:
+    return Path(__file__).resolve().parents[1]
+
+
 def _default_root() -> Path:
-    here = Path(__file__).resolve().parents[1]
-    for name in ("courses", "_courses"):
+    here = _here()
+    for name in ("_courses", "courses"):
         p = here / name
         if p.exists():
             return p
     return here / "_courses"
+
+
+def _curriculum_dir() -> Path:
+    return _here() / "_curriculum"
+
+
+def _default_curriculum() -> Path | None:
+    """The default curriculum lives in _curriculum/.
+
+    Prefer example.curriculum.json, then the first curriculum file.
+    """
+    folder = _curriculum_dir()
+    if not folder.is_dir():
+        return None
+    preferred = folder / "example.curriculum.json"
+    if preferred.exists():
+        return preferred
+    files = sorted(folder.glob("*.curriculum.json")) or sorted(folder.glob("*.json"))
+    return files[0] if files else None
 
 
 def _print(catalog: dict, curriculum: dict | None = None) -> int:

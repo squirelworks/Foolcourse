@@ -1,0 +1,13 @@
+{
+  "name": "Getting around",
+  "official_name": "Street sense",
+  "official": [
+    "phone"
+  ],
+  "extras": [
+    "reading_maps",
+    "bus_times"
+  ],
+  "root": "_courses",
+  "notes": "Example curriculum. phone is a real book in _courses. reading_maps and bus_times are extra and do not need to exist."
+}

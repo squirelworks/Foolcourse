@@ -58,6 +58,32 @@ def scan(root: Path, xml_path: Path | None = None) -> dict:
     return _from_folders(root)
 
 
+
+def _book_title(path: Path) -> str:
+    """Title from a sibling .json or an .fbk envelope. Empty if unreadable."""
+    import json, zlib
+    try:
+        if path.suffix.lower() == ".json":
+            data = json.loads(path.read_text(encoding="utf-8"))
+        elif path.suffix.lower() == ".fbk":
+            twin = path.with_suffix(".json")
+            if twin.exists():
+                data = json.loads(twin.read_text(encoding="utf-8"))
+            else:
+                blob = path.read_bytes()
+                if blob[:4] != b"FBK1":
+                    return ""
+                payload = blob[5:]
+                if blob[4] & 1:
+                    payload = zlib.decompress(payload)
+                data = json.loads(payload.decode("utf-8"))
+        else:
+            return ""
+    except Exception:
+        return ""
+    return str(data.get("title") or "")
+
+
 def official_ids(catalog: dict) -> set[str]:
     ids: set[str] = set()
     for sub in catalog.get("subjects") or []:
@@ -79,6 +105,9 @@ def _from_folders(root: Path) -> dict:
             continue
         if book.name.startswith("."):
             continue
+        # A .json next to an .fbk is the working copy. List the book once.
+        if book.suffix.lower() == ".json" and book.with_suffix(".fbk").exists():
+            continue
         rel = book.relative_to(root)
         parts = list(rel.parts)
         # subject / module / book, or module / book, or just book
@@ -91,9 +120,10 @@ def _from_folders(root: Path) -> dict:
         else:
             subject, module = "Courses", "Courses"
         course_id = book.stem
+        title = _book_title(book) or course_id
         tree.setdefault(subject, {}).setdefault(module, []).append({
             "id": course_id,
-            "title": course_id,
+            "title": title,
             "path": str(book),
             "official": official,
         })

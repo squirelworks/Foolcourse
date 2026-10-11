@@ -19,6 +19,12 @@ python3 foolcourse.py --make path/to/courses  # curriculum maker
 python3 foolcourse.py path/to/courses --curriculum att.curriculum.json
 ```
 
+## Default folders
+
+`_courses/` holds the books. `_curriculum/` holds curriculum files and is the default. With no arguments, Foolcourse catalogs `_courses/` and loads `_curriculum/example.curriculum.json`.
+
+The example official course is `phone`: how to not walk while using your phone. `reading_maps` and `bus_times` are extra and do not exist.
+
 ## Curriculum maker
 
 `--make` opens a window over the courses folder. Mark courses official
