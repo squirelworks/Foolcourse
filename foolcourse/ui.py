@@ -2,7 +2,8 @@
 
 Lists courses by subject and module. Selecting one launches Foolbook
 with that book. Progress and scores come from the shared progress file.
-The overall score counts only courses marked official (03_ATT_Master).
+The overall score counts only the official list of the curriculum.
+Anything else is extra material.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ except ImportError:
 
 from progress.progress import Progress, default_path
 from foolcourse.catalog import official_ids, scan
+from foolcourse.curriculum import apply, load as load_curriculum
 
 
 
@@ -45,12 +47,14 @@ def _find_foolbook() -> Path | None:
 
 
 class Catalog:
-    def __init__(self, root: Path, xml_path: Path | None = None):
+    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None):
         if tk is None:
             print("Tkinter is required for the Foolcourse window.")
             raise SystemExit(1)
         self.courses_root = Path(root)
         self.xml_path = Path(xml_path) if xml_path else None
+        self.curriculum_path = Path(curriculum) if curriculum else None
+        self.curriculum: dict | None = None
         self.progress = Progress(default_path())
         self.catalog: dict = {"title": "Foolcourse", "subjects": []}
         self.rows: list[dict] = []
@@ -113,6 +117,9 @@ class Catalog:
     def _reload(self):
         self.progress.reload()
         self.catalog = scan(self.courses_root, self.xml_path)
+        if self.curriculum_path and self.curriculum_path.exists():
+            self.curriculum = load_curriculum(self.curriculum_path)
+            apply(self.catalog, self.curriculum)
         self._fill()
 
     def _fill(self):
@@ -149,11 +156,16 @@ class Catalog:
                         "official" if is_off else "",
                     ))
         ov = self.progress.overall(official)
+        list_name = (
+            (self.curriculum or {}).get("official_name")
+            or self.catalog.get("official_name")
+            or "Official"
+        )
         if ov["percent"] is None:
-            text = f"Overall (ATT Master): —   ({ov['official']} official)"
+            text = f"Overall ({list_name}): —   ({ov['official']} official)"
         else:
             text = (
-                f"Overall (ATT Master): {ov['percent']:.0f}%"
+                f"Overall ({list_name}): {ov['percent']:.0f}%"
                 f"   ({ov['scored']} of {ov['official']} scored)"
             )
         if ov["excluded"]:

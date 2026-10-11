@@ -25,6 +25,9 @@ anything else on disk are extra.
 
 Make the official list a property of the deployment, not of ATT.
 
+- Curriculum maker: name a curriculum, mark the official list, save a
+  curriculum file. Anything not marked is extra material.
+
 - An official list is named by the deployment: a folder, a menu in a
   catalog file, or an explicit id set. ATT Master is one such list.
 - Extra material is everything not on that list. It stays in the

@@ -15,7 +15,18 @@ python3 foolcourse.py                         # catalog _courses/
 python3 foolcourse.py path/to/courses         # catalog that folder
 python3 foolcourse.py path/to/courses --xml courses.xml
 python3 foolcourse.py --list path/to/courses  # print, no window
+python3 foolcourse.py --make path/to/courses  # curriculum maker
+python3 foolcourse.py path/to/courses --curriculum att.curriculum.json
 ```
+
+## Curriculum maker
+
+`--make` opens a window over the courses folder. Mark courses official
+or extra, name the curriculum and the official list, and save a
+curriculum file. `--curriculum` loads that file: the overall counts only
+its official list, and the window labels the track by that list's name.
+
+ATT is one curriculum. A second deployment makes its own file.
 
 ## Layout
 
