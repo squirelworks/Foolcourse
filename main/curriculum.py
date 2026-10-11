@@ -102,6 +102,17 @@ def _all_ids(catalog: dict) -> set[str]:
     return ids
 
 
+
+def _row_style(root):
+    """Give list rows enough height for the font. The theme default clips them."""
+    import tkinter.font as tkfont
+    from tkinter import ttk
+    style = ttk.Style(root)
+    font = tkfont.nametofont("TkDefaultFont")
+    height = font.metrics("linespace") + 10
+    style.configure("Treeview", rowheight=height, font=font)
+    style.configure("Treeview.Heading", font=font, padding=(4, 6))
+
 class Maker:
     """Window to mark courses official or extra and save a curriculum."""
 
@@ -127,6 +138,7 @@ class Maker:
         self.root.title("Curriculum maker")
         self.root.geometry("980x560")
         self.root.minsize(720, 360)
+        _row_style(self.root)
         self._build()
         self._fill()
         self.root.mainloop()

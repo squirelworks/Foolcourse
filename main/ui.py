@@ -46,6 +46,16 @@ def _find_foolbook() -> Path | None:
     return None
 
 
+
+def _row_style(root):
+    """Give list rows enough height for the font. The theme default clips them."""
+    import tkinter.font as tkfont
+    style = ttk.Style(root)
+    font = tkfont.nametofont("TkDefaultFont")
+    height = font.metrics("linespace") + 10
+    style.configure("Treeview", rowheight=height, font=font)
+    style.configure("Treeview.Heading", font=font, padding=(4, 6))
+
 class Catalog:
     def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None):
         if tk is None:
@@ -63,6 +73,7 @@ class Catalog:
         self.root.title("Foolcourse")
         self.root.geometry("1040x560")
         self.root.minsize(720, 360)
+        _row_style(self.root)
         self._build()
         self._reload()
         self.root.mainloop()
