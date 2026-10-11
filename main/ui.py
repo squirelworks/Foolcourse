@@ -20,6 +20,7 @@ except ImportError:
 
 from progress.progress import Progress, default_path, student_path
 from main.catalog import official_ids, scan
+from main.locale import t
 from main.curriculum import apply, load as load_curriculum
 
 
@@ -47,58 +48,17 @@ def _find_foolbook() -> Path | None:
 
 
 
-def _row_style(root, theme: str = "classic"):
-    """Size the rows, and apply a modern theme when asked.
-
-    classic is the platform ttk look. modern is clam with quieter colors
-    for people who do not want the Win95 controls.
-    """
+def _row_style(root):
+    """Give list rows enough height for the font. The theme default clips them."""
     import tkinter.font as tkfont
     style = ttk.Style(root)
-    base = tkfont.nametofont("TkDefaultFont")
-    if theme == "modern":
-        for name in ("Segoe UI", "Ubuntu", "DejaVu Sans", "Helvetica"):
-            try:
-                font = tkfont.Font(root=root, family=name, size=11)
-                font.measure("x")
-                break
-            except Exception:
-                font = base
-        else:
-            font = base
-        _modern(style, root, font)
-    else:
-        font = base
-    height = font.metrics("linespace") + (12 if theme == "modern" else 10)
+    font = tkfont.nametofont("TkDefaultFont")
+    height = font.metrics("linespace") + 10
     style.configure("Treeview", rowheight=height, font=font)
-    style.configure("Treeview.Heading", font=font, padding=(6, 8) if theme == "modern" else (4, 6))
-
-
-def _modern(style, root, font):
-    """A quiet light theme. clam underneath, so it is not the Win95 set."""
-    try:
-        style.theme_use("clam")
-    except Exception:
-        pass
-    bg = "#f6f3ee"
-    fg = "#1c1917"
-    muted = "#e6e1d8"
-    line = "#d4cec3"
-    accent = "#1d4e89"
-    root.configure(background=bg)
-    style.configure(".", background=bg, foreground=fg, font=font)
-    style.configure("TFrame", background=bg)
-    style.configure("TLabel", background=bg, foreground=fg, font=font)
-    style.configure("TButton", background=muted, foreground=fg, padding=(12, 6), borderwidth=0, font=font)
-    style.map("TButton", background=[("active", "#ddd6cb"), ("pressed", line)])
-    style.configure("Treeview", background="#fffcf7", fieldbackground="#fffcf7", foreground=fg, borderwidth=0)
-    style.configure("Treeview.Heading", background=muted, foreground=fg, borderwidth=0)
-    style.map("Treeview", background=[("selected", accent)], foreground=[("selected", "#fffcf7")])
-    style.configure("Vertical.TScrollbar", background=muted, troughcolor=bg, borderwidth=0, arrowsize=12)
-    style.configure("Horizontal.TScrollbar", background=muted, troughcolor=bg, borderwidth=0, arrowsize=12)
+    style.configure("Treeview.Heading", font=font, padding=(4, 6))
 
 class Catalog:
-    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337, student: str | None = None, theme: str = "classic"):
+    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337, student: str | None = None, theme: str = "classic", locale: str = "en", debug: bool = False):
         if tk is None:
             print("Tkinter is required for the Foolcourse window.")
             raise SystemExit(1)
@@ -106,94 +66,140 @@ class Catalog:
         self.xml_path = Path(xml_path) if xml_path else None
         self.curriculum_path = Path(curriculum) if curriculum else None
         self.port = port
-        self.student_file = student_path(student) if student else default_path()
+        self.debug = debug
+        self.locale = locale or "en"
         self.curriculum: dict | None = None
-        self.progress = Progress(self.student_file)
+        self.progress = Progress(student_path(student) if student else default_path())
+        if not locale:
+            self.locale = str(self.progress.data.get("locale") or "en")
         self.catalog: dict = {"title": "Foolcourse", "subjects": []}
-        self.rows: list[dict] = []
+        self.subject_i: int | None = None
+        self.module_i: int | None = None
+        self.course_rows: list[dict] = []
+        self._filling = False
 
         self.root = tk.Tk()
-        self.root.title("Foolcourse")
+        self.root.title(t(self.locale, "app"))
         self.root.geometry("1040x560")
         self.root.minsize(720, 360)
-        _row_style(self.root, theme)
+        _row_style(self.root)
         self._build()
         self._reload()
+        self.root.bind("<FocusIn>", lambda _e: self._refresh_scores())
         self.root.mainloop()
 
     def _build(self):
         bar = ttk.Frame(self.root, padding=4)
         bar.pack(fill="x")
-        ttk.Button(bar, text="Courses folder", command=self._pick_root).pack(side="left")
-        ttk.Button(bar, text="courses.xml", command=self._pick_xml).pack(side="left", padx=4)
-        ttk.Button(bar, text="Refresh", command=self._reload).pack(side="left", padx=4)
+        ttk.Button(bar, text=t(self.locale, "courses_folder"), command=self._pick_root).pack(side="left")
+        ttk.Button(bar, text=t(self.locale, "courses_xml"), command=self._pick_xml).pack(side="left", padx=4)
+        ttk.Button(bar, text=t(self.locale, "refresh"), command=self._reload).pack(side="left", padx=4)
 
         info = ttk.Frame(self.root, padding=(4, 0, 4, 4))
         info.pack(fill="x")
-        self.heading = ttk.Label(info, text="Foolcourse")
+        self.heading = ttk.Label(info, text=t(self.locale, "app"))
         self.heading.pack(side="left")
+        self.crumb = ttk.Label(info, text="")
+        self.crumb.pack(side="left", padx=12)
         self.overall = ttk.Label(info, text="")
         self.overall.pack(side="right")
 
-        frame = ttk.Frame(self.root)
-        frame.pack(fill="both", expand=True, padx=4, pady=(0, 4))
-        cols = ("subject", "module", "course", "id", "progress", "score", "track")
-        self.tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
-        # Weight is the share of spare width. Course gets the most so titles fit.
-        self._col_weight = {
-            "subject": 2, "module": 2, "course": 4,
-            "id": 1, "progress": 1, "score": 1, "track": 1,
-        }
-        self._col_min = {
-            "subject": 90, "module": 90, "course": 160,
-            "id": 70, "progress": 72, "score": 56, "track": 64,
-        }
-        labels = {
-            "subject": "Subject", "module": "Module", "course": "Course",
-            "id": "Id", "progress": "Progress", "score": "Score", "track": "Track",
-        }
-        for key in cols:
-            self.tree.heading(key, text=labels[key])
-            self.tree.column(
-                key,
-                width=self._col_min[key],
-                minwidth=self._col_min[key],
-                stretch=True,
-            )
-        yscroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
-        xscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
-        self.tree.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
-        self.tree.grid(row=0, column=0, sticky="nsew")
-        yscroll.grid(row=0, column=1, sticky="ns")
-        xscroll.grid(row=1, column=0, sticky="ew")
-        frame.rowconfigure(0, weight=1)
-        frame.columnconfigure(0, weight=1)
-        frame.bind("<Configure>", self._fit_columns)
-        self.tree.bind("<Double-1>", lambda _e: self._launch())
+        self.cols = ttk.Frame(self.root)
+        self.cols.pack(fill="both", expand=True, padx=4, pady=(0, 4))
+        self.cols.rowconfigure(0, weight=1)
+
+        self.sub_tree = self._list(self.cols, 0, t(self.locale, "subject"))
+        self.mod_tree = self._list(self.cols, 1, t(self.locale, "module"))
+        self.course_tree, self.course_frame = self._course_list(self.cols, 2)
+        self.sub_tree.bind("<<TreeviewSelect>>", lambda _e: self._on_subject())
+        self.mod_tree.bind("<<TreeviewSelect>>", lambda _e: self._on_module())
+        self.course_tree.bind("<Double-1>", lambda _e: self._launch())
 
         bot = ttk.Frame(self.root, padding=4)
         bot.pack(fill="x")
-        ttk.Button(bot, text="Open in Foolbook", command=self._launch).pack(side="left")
-        self.status = ttk.Label(bot, text="")
+        ttk.Button(bot, text=t(self.locale, "open"), command=self._launch).pack(side="left")
+        self.status = ttk.Label(bot, text=t(self.locale, "select_subject"))
         self.status.pack(side="left", padx=12)
 
-    def _fit_columns(self, _event=None):
-        """Give each column a share of the visible width. Course gets the most."""
-        width = self.tree.winfo_width()
-        if width <= 1:
-            return
-        weights = self._col_weight
-        mins = self._col_min
-        total_w = sum(weights.values()) or 1
-        spare = max(0, width - sum(mins.values()))
-        for key, weight in weights.items():
-            share = mins[key] + int(spare * weight / total_w)
-            self.tree.column(key, width=share)
+    def _list(self, parent, column: int, heading: str):
+        frame = ttk.Frame(parent)
+        frame.grid(row=0, column=column, sticky="nsew")
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        tree = ttk.Treeview(frame, columns=("name",), show="headings", selectmode="browse")
+        tree.heading("name", text=heading)
+        tree.column("name", width=160, minwidth=80, stretch=True)
+        scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+        tree.configure(yscrollcommand=scroll.set)
+        tree.grid(row=0, column=0, sticky="nsew")
+        scroll.grid(row=0, column=1, sticky="ns")
+        frame.grid_remove()
+        return tree
+
+    def _course_list(self, parent, column: int):
+        frame = ttk.Frame(parent)
+        frame.grid(row=0, column=column, sticky="nsew")
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        cols = ["course", "progress", "score"]
+        if self.debug:
+            cols += ["id", "track"]
+        tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
+        labels = {
+            "course": t(self.locale, "course"),
+            "progress": t(self.locale, "progress"),
+            "score": t(self.locale, "score"),
+            "id": t(self.locale, "id"),
+            "track": t(self.locale, "track"),
+        }
+        mins = {"course": 160, "progress": 72, "score": 72, "id": 80, "track": 72}
+        for key in cols:
+            tree.heading(key, text=labels[key])
+            tree.column(key, width=mins[key], minwidth=mins[key], stretch=key == "course")
+        yscroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+        tree.configure(yscrollcommand=yscroll.set)
+        tree.grid(row=0, column=0, sticky="nsew")
+        yscroll.grid(row=0, column=1, sticky="ns")
+        frame.grid_remove()
+        return tree, frame
+
+    def _layout(self):
+        """One column until a subject is chosen, then two, then three.
+
+        Once a later column is open, the earlier columns stay narrow so
+        the names truncate and the current list gets the width.
+        """
+        show_mod = self.subject_i is not None
+        show_course = show_mod and self.module_i is not None
+        sub_frame = self.sub_tree.master
+        mod_frame = self.mod_tree.master
+        sub_frame.grid()
+        if show_mod:
+            mod_frame.grid()
+        else:
+            mod_frame.grid_remove()
+        if show_course:
+            self.course_frame.grid()
+        else:
+            self.course_frame.grid_remove()
+        for i in range(3):
+            self.cols.columnconfigure(i, weight=0, minsize=0)
+        if not show_mod:
+            self.cols.columnconfigure(0, weight=1, minsize=200)
+        elif not show_course:
+            self.cols.columnconfigure(0, weight=0, minsize=140)
+            self.cols.columnconfigure(1, weight=1, minsize=200)
+        else:
+            self.cols.columnconfigure(0, weight=0, minsize=120)
+            self.cols.columnconfigure(1, weight=0, minsize=140)
+            self.cols.columnconfigure(2, weight=1, minsize=240)
 
     def _pick_root(self):
-        p = filedialog.askdirectory(title="Courses folder")
+        p = filedialog.askdirectory(title=t(self.locale, "courses_folder"))
         if p:
             self.courses_root = Path(p)
+            self.subject_i = None
+            self.module_i = None
             self._reload()
 
     def _pick_xml(self):
@@ -203,6 +209,8 @@ class Catalog:
         )
         if p:
             self.xml_path = Path(p)
+            self.subject_i = None
+            self.module_i = None
             self._reload()
 
     def _reload(self):
@@ -211,41 +219,137 @@ class Catalog:
         if self.curriculum_path and self.curriculum_path.exists():
             self.curriculum = load_curriculum(self.curriculum_path)
             apply(self.catalog, self.curriculum)
+        subjects = self.catalog.get("subjects") or []
+        if self.subject_i is not None and self.subject_i >= len(subjects):
+            self.subject_i = None
+            self.module_i = None
+        if self.subject_i is not None:
+            modules = subjects[self.subject_i].get("modules") or []
+            if self.module_i is not None and self.module_i >= len(modules):
+                self.module_i = None
         self._fill()
 
+    def _refresh_scores(self):
+        """Re-read progress when the window is focused again. Do not rescan."""
+        self.progress.reload()
+        self._fill_courses()
+        self._overall()
+
     def _fill(self):
-        for i in self.tree.get_children():
-            self.tree.delete(i)
-        self.rows = []
+        if self._filling:
+            return
+        self._filling = True
+        try:
+            self._fill_subjects()
+            self._fill_modules()
+            self._fill_courses()
+            self._layout()
+            self._overall()
+            self._crumb()
+        finally:
+            self._filling = False
+
+    def _on_subject(self):
+        if self._filling:
+            return
+        sel = self.sub_tree.selection()
+        if not sel:
+            return
+        idx = int(sel[0])
+        if idx == self.subject_i:
+            return
+        self.subject_i = idx
+        self.module_i = None
+        self._fill()
+        n = len((self.catalog["subjects"][idx].get("modules") or []))
+        self.status.config(text=t(self.locale, "select_module", n=n))
+
+    def _on_module(self):
+        if self._filling:
+            return
+        sel = self.mod_tree.selection()
+        if not sel or self.subject_i is None:
+            return
+        idx = int(sel[0])
+        if idx == self.module_i:
+            return
+        self.module_i = idx
+        self._fill()
+        self.status.config(text=t(self.locale, "select_course", n=len(self.course_rows)))
+
+    def _fill_subjects(self):
+        tree = self.sub_tree
+        for i in tree.get_children():
+            tree.delete(i)
+        narrow = self.subject_i is not None
+        for i, sub in enumerate(self.catalog.get("subjects") or []):
+            tree.insert("", "end", iid=str(i), values=(_clip(sub.get("name") or "", narrow),))
+        if self.subject_i is not None:
+            tree.selection_set(str(self.subject_i))
+            tree.see(str(self.subject_i))
+
+    def _fill_modules(self):
+        tree = self.mod_tree
+        for i in tree.get_children():
+            tree.delete(i)
+        if self.subject_i is None:
+            return
+        modules = (self.catalog["subjects"][self.subject_i].get("modules") or [])
+        narrow = self.module_i is not None
+        for i, mod in enumerate(modules):
+            tree.insert("", "end", iid=str(i), values=(_clip(mod.get("name") or "", narrow),))
+        if self.module_i is not None and str(self.module_i) in tree.get_children():
+            tree.selection_set(str(self.module_i))
+            tree.see(str(self.module_i))
+
+    def _fill_courses(self):
+        tree = self.course_tree
+        keep = None
+        sel = tree.selection()
+        if sel and self.course_rows:
+            idx = tree.index(sel[0])
+            if 0 <= idx < len(self.course_rows):
+                keep = self.course_rows[idx].get("id")
+        for i in tree.get_children():
+            tree.delete(i)
+        self.course_rows = []
+        if self.subject_i is None or self.module_i is None:
+            return
+        subject = self.catalog["subjects"][self.subject_i]
+        module = (subject.get("modules") or [])[self.module_i]
+        for course in module.get("courses") or []:
+            cid = course.get("id") or ""
+            self.course_rows.append({
+                "id": cid,
+                "path": course.get("path") or "",
+                "official": bool(course.get("official")),
+            })
+            values = [
+                course.get("title") or cid,
+                _progress_label(self.progress, cid, self.locale),
+                _score_text(self.progress, cid),
+            ]
+            if self.debug:
+                values.append(cid)
+                values.append(t(self.locale, "official") if course.get("official") else "")
+            iid = tree.insert("", "end", values=tuple(values))
+            if keep and cid == keep:
+                tree.selection_set(iid)
+
+    def _crumb(self):
+        parts = []
+        subjects = self.catalog.get("subjects") or []
+        if self.subject_i is not None and self.subject_i < len(subjects):
+            parts.append(subjects[self.subject_i].get("name") or "")
+            modules = subjects[self.subject_i].get("modules") or []
+            if self.module_i is not None and self.module_i < len(modules):
+                parts.append(modules[self.module_i].get("name") or "")
+        self.crumb.config(text=" / ".join(parts))
+        if self.subject_i is None:
+            self.status.config(text=t(self.locale, "select_subject"))
+
+    def _overall(self):
         official = official_ids(self.catalog)
-        for sub in self.catalog.get("subjects") or []:
-            for mod in sub.get("modules") or []:
-                for course in mod.get("courses") or []:
-                    cid = course.get("id") or ""
-                    is_off = bool(course.get("official"))
-                    score = self.progress.course_score(cid)
-                    best = score.get("best")
-                    score_txt = ""
-                    if best is not None:
-                        answered = score.get("answered") or 0
-                        correct = score.get("correct") or 0
-                        score_txt = f"{best:.0f}%"
-                        if answered:
-                            score_txt += f" ({correct}/{answered})"
-                    self.rows.append({
-                        "id": cid,
-                        "path": course.get("path") or "",
-                        "official": is_off,
-                    })
-                    self.tree.insert("", "end", values=(
-                        sub.get("name") or "",
-                        mod.get("name") or "",
-                        course.get("title") or cid,
-                        cid,
-                        self.progress.status(cid),
-                        score_txt,
-                        "official" if is_off else "",
-                    ))
         ov = self.progress.overall(official)
         list_name = (
             (self.curriculum or {}).get("official_name")
@@ -253,47 +357,79 @@ class Catalog:
             or "Official"
         )
         if ov["percent"] is None:
-            text = f"Overall ({list_name}): —   ({ov['official']} official)"
+            text = t(self.locale, "overall_empty", name=list_name, n=ov["official"])
         else:
-            text = (
-                f"Overall ({list_name}): {ov['percent']:.0f}%"
-                f"   ({ov['scored']} of {ov['official']} scored)"
+            text = t(
+                self.locale, "overall",
+                name=list_name, pct=ov["percent"],
+                scored=ov["scored"], n=ov["official"],
             )
         if ov["excluded"]:
-            text += f"   {ov['excluded']} other scored, not counted"
+            text += t(self.locale, "overall_other", n=ov["excluded"])
         self.overall.config(text=text)
-        n = len(self.rows)
-        root_name = self.courses_root.name or str(self.courses_root)
-        self.status.config(text=f"{n} courses in {root_name}")
-        title = self.catalog.get("title") or "Foolcourse"
-        self.heading.config(text=f"{title}  ·  {self.progress.student_name()}")
+        self.heading.config(text=self.catalog.get("title") or t(self.locale, "app"))
 
     def _selected(self) -> dict | None:
-        sel = self.tree.selection()
+        sel = self.course_tree.selection()
         if not sel:
             return None
-        idx = self.tree.index(sel[0])
-        return self.rows[idx] if 0 <= idx < len(self.rows) else None
+        idx = self.course_tree.index(sel[0])
+        return self.course_rows[idx] if 0 <= idx < len(self.course_rows) else None
 
     def _launch(self):
         row = self._selected()
         if not row:
-            messagebox.showinfo("Foolcourse", "Select a course first.")
+            messagebox.showinfo(t(self.locale, "app"), t(self.locale, "select_first"))
             return
         path = row.get("path") or ""
         if not path or not Path(path).exists():
-            messagebox.showwarning("Foolcourse", f"Course file not found:\n{path or '(no path)'}")
+            messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
         self.progress.touch(cid)
-        self._fill()
+        self._fill_courses()
         foolbook = _find_foolbook()
         if foolbook is None:
-            messagebox.showwarning(
-                "Foolcourse",
-                "Foolbook was not found.\n"
-                "Put Foolbook next to Foolcourse, or set FOOLBOOK.",
-            )
+            messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
             return
-        cmd = [sys.executable, str(foolbook), "--port", str(self.port), "--student", str(self.student_file), path]
+        cmd = [
+            sys.executable, str(foolbook),
+            "--port", str(self.port),
+            "--student", str(self.progress.path),
+            "--locale", self.locale,
+            "--course", cid,
+            path,
+        ]
         subprocess.Popen(cmd)
+
+
+
+def _progress_label(progress: Progress, cid: str, locale: str) -> str:
+    rec_label = progress.label(cid)
+    if rec_label == "done":
+        return t(locale, "done")
+    if rec_label == "started":
+        return t(locale, "started")
+    if rec_label.endswith(" pages"):
+        n = rec_label.split()[0]
+        return t(locale, "pages", n=n)
+    return rec_label
+
+
+def _clip(text: str, narrow: bool) -> str:
+    if not narrow or len(text) <= 18:
+        return text
+    return text[:17] + "…"
+
+
+def _score_text(progress: Progress, cid: str) -> str:
+    score = progress.course_score(cid)
+    best = score.get("best")
+    if best is None:
+        return ""
+    text = f"{best:.0f}%"
+    answered = score.get("answered") or 0
+    if answered:
+        text += f" ({score.get('correct') or 0}/{answered})"
+    return text
+

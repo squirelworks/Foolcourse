@@ -28,6 +28,16 @@ than 1 is not this standard.
 {
   "id": "alex",
   "name": "Alex",
+  "preferred_name": "",
+  "school_id": "",
+  "cohort": "",
+  "curriculum": "",
+  "locale": "en",
+  "theme": "",
+  "port": null,
+  "enrolled": "",
+  "started": "",
+  "last_seen": "",
   "courses": {}
 }
 ```
@@ -35,11 +45,22 @@ than 1 is not this standard.
 | field | meaning |
 | --- | --- |
 | `id` | student id, stable |
-| `name` | display name |
+| `name` | given name |
+| `preferred_name` | what the window shows, if set |
+| `school_id` | school or institution id, opaque |
+| `cohort` | class, section, or intake |
+| `curriculum` | official list this student is on |
+| `locale` | Foolcourse locale id, such as `en` or `klingon` |
+| `theme` | `classic` or `modern`, empty means the default |
+| `port` | viewer port, or null |
+| `enrolled` | date added, ISO |
+| `started` | first open, ISO |
+| `last_seen` | last open, ISO |
 | `courses` | one record per course id |
 
-A course record may hold `opened`, `completed`, `last_page`, `visited`,
-and `score`. `score` may hold `correct`, `answered`, `percent`, `best`.
+A course record may hold `opened`, `completed`, `completed_on`,
+`attempts`, `time_seconds`, `last_page`, `visited`, and `score`.
+`score` may hold `correct`, `answered`, `percent`, `best`.
 
 ## Password
 

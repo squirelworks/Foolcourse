@@ -92,8 +92,12 @@ class Progress:
     def touch(self, course_id: str) -> None:
         if not course_id:
             return
+        from datetime import date
         rec = self._ensure(course_id)
         rec["opened"] = True
+        today = date.today().isoformat()
+        self.data.setdefault("started", today)
+        self.data["last_seen"] = today
         self._save()
 
     def mark_page(self, course_id: str, page_id: str) -> None:
@@ -117,8 +121,10 @@ class Progress:
     def complete(self, course_id: str) -> None:
         if not course_id:
             return
+        from datetime import date
         rec = self._ensure(course_id)
         rec["completed"] = True
+        rec.setdefault("completed_on", date.today().isoformat())
         self._save()
 
     def record_answer(self, course_id: str, page_id: str, correct: bool) -> None:
@@ -140,6 +146,7 @@ class Progress:
         score["percent"] = round(percent, 1)
         best = score.get("best")
         score["best"] = round(percent, 1) if best is None else round(max(best, percent), 1)
+        rec["attempts"] = int(rec.get("attempts") or 0) + 1
         self._save()
 
     def set_score(self, course_id: str, percent: float, max_score: float = 100.0) -> None:
@@ -194,17 +201,42 @@ class Progress:
         return self.data.setdefault("courses", {}).setdefault(course_id, {})
 
     def student_name(self) -> str:
-        return str(self.data.get("name") or self.data.get("id") or self.path.stem)
+        return str(
+            self.data.get("preferred_name")
+            or self.data.get("name")
+            or self.data.get("id")
+            or self.path.stem
+        )
+
+    def set_locale(self, locale: str) -> None:
+        if locale:
+            self.data["locale"] = locale
+            self._save()
 
     def _blank(self) -> dict:
         stem = self.path.stem or "student"
-        return {"id": stem, "name": stem.replace("_", " ").title(), "courses": {}}
+        return {
+            "id": stem,
+            "name": stem.replace("_", " ").title(),
+            "preferred_name": "",
+            "school_id": "",
+            "cohort": "",
+            "curriculum": "",
+            "locale": "en",
+            "theme": "",
+            "port": None,
+            "enrolled": "",
+            "started": "",
+            "last_seen": "",
+            "courses": {},
+        }
 
     def _normalize(self) -> None:
         if not isinstance(self.data, dict):
             self.data = self._blank()
-        self.data.setdefault("id", self.path.stem or "student")
-        self.data.setdefault("name", str(self.data.get("id") or "Student"))
+        blank = self._blank()
+        for key, value in blank.items():
+            self.data.setdefault(key, value)
         self.data.setdefault("courses", {})
 
     def _read(self) -> dict:

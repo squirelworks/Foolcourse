@@ -7,6 +7,7 @@
   python3 -m foolcourse --debug                 # show course id and track
   python3 -m foolcourse --theme modern          # quieter controls, not Win95
   python3 -m foolcourse --student alex          # _student/alex.fcs
+  python3 -m foolcourse --locale klingon        # Foolcourse strings; course text stays
 """
 
 from __future__ import annotations
@@ -33,6 +34,8 @@ def main(argv: list[str] | None = None) -> int:
     port = 1337
     theme = "classic"
     student = None
+    locale = None
+    port_set = False
     rest: list[str] = []
     i = 0
     while i < len(argv):
@@ -58,6 +61,9 @@ def main(argv: list[str] | None = None) -> int:
         elif a == "--student" and i + 1 < len(argv):
             student = argv[i + 1]
             i += 1
+        elif a == "--locale" and i + 1 < len(argv):
+            locale = argv[i + 1]
+            i += 1
         elif a == "--port" and i + 1 < len(argv):
             try:
                 port = int(argv[i + 1])
@@ -67,6 +73,7 @@ def main(argv: list[str] | None = None) -> int:
             if not 1 <= port <= 65535:
                 print(f"--port out of range: {port}")
                 return 2
+            port_set = True
             i += 1
         else:
             rest.append(a)
@@ -85,10 +92,21 @@ def main(argv: list[str] | None = None) -> int:
     if curriculum_path and curriculum_path.exists():
         curriculum = load_curriculum(curriculum_path)
         apply(catalog, curriculum)
+    from main.locale import resolve
+    progress = Progress(student_path(student) if student else default_path())
+    if locale is None:
+        locale = str(progress.data.get("locale") or "en")
+    locale = resolve(locale)
+    if locale != (progress.data.get("locale") or "en"):
+        progress.set_locale(locale)
+    if theme == "classic" and progress.data.get("theme"):
+        theme = str(progress.data["theme"])
+    if not port_set and progress.data.get("port"):
+        port = int(progress.data["port"])
     if listing:
         return _print(catalog, curriculum, debug=debug, student=student)
     from main.ui import Catalog
-    Catalog(root, xml_path, curriculum_path, port, student, theme)
+    Catalog(root, xml_path, curriculum_path, port, student, theme, locale, debug)
     return 0
 
 
