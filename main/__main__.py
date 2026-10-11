@@ -4,6 +4,7 @@
   python3 -m foolcourse path/to/courses         # catalog that folder
   python3 -m foolcourse path/to/courses --xml courses.xml
   python3 -m foolcourse --list path/to/courses  # print, no window
+  python3 -m foolcourse --debug                 # show course id and track
 """
 
 from __future__ import annotations
@@ -24,6 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     argv = list(argv if argv is not None else sys.argv[1:])
     listing = False
     making = False
+    debug = False
     xml_path = None
     curriculum_path = None
     port = 1337
@@ -35,6 +37,8 @@ def main(argv: list[str] | None = None) -> int:
             listing = True
         elif a == "--make":
             making = True
+        elif a == "--debug":
+            debug = True
         elif a == "--xml" and i + 1 < len(argv):
             xml_path = Path(argv[i + 1])
             i += 1
@@ -69,9 +73,9 @@ def main(argv: list[str] | None = None) -> int:
         curriculum = load_curriculum(curriculum_path)
         apply(catalog, curriculum)
     if listing:
-        return _print(catalog, curriculum)
+        return _print(catalog, curriculum, debug=debug)
     from main.ui import Catalog
-    Catalog(root, xml_path, curriculum_path, port)
+    Catalog(root, xml_path, curriculum_path, port, debug=debug)
     return 0
 
 
@@ -107,7 +111,7 @@ def _default_curriculum() -> Path | None:
     return files[0] if files else None
 
 
-def _print(catalog: dict, curriculum: dict | None = None) -> int:
+def _print(catalog: dict, curriculum: dict | None = None, debug: bool = False) -> int:
     progress = Progress(default_path())
     official = official_ids(catalog)
     n = 0
@@ -119,12 +123,15 @@ def _print(catalog: dict, curriculum: dict | None = None) -> int:
                 score = progress.course_score(cid)
                 best = score.get("best")
                 score_txt = f"{best:.0f}%" if best is not None else "-"
-                track = "official" if course.get("official") else ""
-                print(
+                line = (
                     f"{sub.get('name','')} / {mod.get('name','')} / "
-                    f"{course.get('title') or cid}  [{cid}]  "
-                    f"{progress.status(cid) or '-'}  {score_txt}  {track}"
+                    f"{course.get('title') or cid}  "
+                    f"{progress.label(cid) or '-'}  {score_txt}"
                 )
+                if debug:
+                    track = "official" if course.get("official") else ""
+                    line += f"  [{cid}]  {track}"
+                print(line)
     ov = progress.overall(official)
     list_name = (curriculum or {}).get("official_name") or catalog.get("official_name") or "Official"
     pct = f"{ov['percent']:.0f}%" if ov["percent"] is not None else "-"

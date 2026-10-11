@@ -18,7 +18,7 @@ try:
 except ImportError:
     tk = None
 
-from progress.progress import Progress, default_path
+from progress.progress import Progress, default_path, student_path
 from main.catalog import official_ids, scan
 from main.curriculum import apply, load as load_curriculum
 
@@ -57,7 +57,7 @@ def _row_style(root):
     style.configure("Treeview.Heading", font=font, padding=(4, 6))
 
 class Catalog:
-    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337):
+    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337, student: str | None = None):
         if tk is None:
             print("Tkinter is required for the Foolcourse window.")
             raise SystemExit(1)
@@ -65,8 +65,9 @@ class Catalog:
         self.xml_path = Path(xml_path) if xml_path else None
         self.curriculum_path = Path(curriculum) if curriculum else None
         self.port = port
+        self.student_file = student_path(student) if student else default_path()
         self.curriculum: dict | None = None
-        self.progress = Progress(default_path())
+        self.progress = Progress(self.student_file)
         self.catalog: dict = {"title": "Foolcourse", "subjects": []}
         self.rows: list[dict] = []
 
@@ -223,7 +224,8 @@ class Catalog:
         n = len(self.rows)
         root_name = self.courses_root.name or str(self.courses_root)
         self.status.config(text=f"{n} courses in {root_name}")
-        self.heading.config(text=self.catalog.get("title") or "Foolcourse")
+        title = self.catalog.get("title") or "Foolcourse"
+        self.heading.config(text=f"{title}  ·  {self.progress.student_name()}")
 
     def _selected(self) -> dict | None:
         sel = self.tree.selection()
@@ -252,5 +254,5 @@ class Catalog:
                 "Put Foolbook next to Foolcourse, or set FOOLBOOK.",
             )
             return
-        cmd = [sys.executable, str(foolbook), "--port", str(self.port), path]
+        cmd = [sys.executable, str(foolbook), "--port", str(self.port), "--student", str(self.student_file), path]
         subprocess.Popen(cmd)

@@ -3,7 +3,8 @@
 The viewer records visited pages, the last page, and quiz answers.
 Foolcourse reads the same file to show progress and scores.
 
-Stored as progress/progress.json, which is gitignored.
+Stored as the current student file under _student/. Default is
+_student/student.json. Plain JSON for now; a later module can lock it down.
 
 Score model
 -----------
@@ -21,24 +22,41 @@ import json
 from pathlib import Path
 
 
-def default_path() -> Path:
-    """Shared progress file used by the viewer and Foolcourse."""
+def student_dir() -> Path:
+    """Folder that holds student files."""
     root = Path(__file__).resolve().parents[1]
-    dest = root / "progress" / "progress.json"
-    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest = root / "_student"
+    dest.mkdir(parents=True, exist_ok=True)
     return dest
+
+
+def student_path(name: str = "student") -> Path:
+    """Path for a student. A bare name lives in _student/. A path is used as given."""
+    raw = (name or "student").strip()
+    path = Path(raw)
+    if path.suffix.lower() == ".json" or "/" in raw or raw.startswith("."):
+        path = path.expanduser()
+        if not path.is_absolute():
+            path = student_dir().parent / path
+        return path
+    return student_dir() / f"{raw}.json"
+
+
+def default_path() -> Path:
+    """The student file Foolcourse and the viewer share. Default student."""
+    return student_path("student")
 
 
 class Progress:
     def __init__(self, path: Path | None = None):
         self.path = Path(path) if path else default_path()
-        self.data: dict = {"courses": {}}
+        self.data: dict = self._blank()
         if self.path.exists():
             try:
                 self.data = json.loads(self.path.read_text(encoding="utf-8"))
             except Exception:
-                self.data = {"courses": {}}
-        self.data.setdefault("courses", {})
+                self.data = self._blank()
+        self._normalize()
 
     def reload(self) -> None:
         if self.path.exists():
@@ -46,7 +64,7 @@ class Progress:
                 self.data = json.loads(self.path.read_text(encoding="utf-8"))
             except Exception:
                 return
-        self.data.setdefault("courses", {})
+        self._normalize()
 
     def status(self, course_id: str) -> str:
         rec = self._rec(course_id)
@@ -160,6 +178,21 @@ class Progress:
     def _ensure(self, course_id: str) -> dict:
         return self.data.setdefault("courses", {}).setdefault(course_id, {})
 
+    def student_name(self) -> str:
+        return str(self.data.get("name") or self.data.get("id") or self.path.stem)
+
+    def _blank(self) -> dict:
+        stem = self.path.stem or "student"
+        return {"id": stem, "name": stem.replace("_", " ").title(), "courses": {}}
+
+    def _normalize(self) -> None:
+        if not isinstance(self.data, dict):
+            self.data = self._blank()
+        self.data.setdefault("id", self.path.stem or "student")
+        self.data.setdefault("name", str(self.data.get("id") or "Student"))
+        self.data.setdefault("courses", {})
+
     def _save(self) -> None:
+        self._normalize()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(json.dumps(self.data, indent=2), encoding="utf-8")
+        self.path.write_text(json.dumps(self.data, indent=2) + "\n", encoding="utf-8")
