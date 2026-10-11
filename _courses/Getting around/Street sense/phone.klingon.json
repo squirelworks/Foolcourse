@@ -1,0 +1,75 @@
+{
+  "locale": "klingon",
+  "title": "ghogh HablI' Dalo'taHvIS yIyItbe'",
+  "subject": "leng",
+  "module": "He ey'",
+  "pages": {
+    "P0": {
+      "text": [
+        "ghogh HablI' Dalo'taHvIS yIyItbe'",
+        "mInlIj yIHuS. ghojmeH paq puS.",
+        "ghogh HablI' loSlaH. HeH loSlaHbe'."
+      ],
+      "items": [
+        {"label": "tagh"}
+      ]
+    },
+    "P100": {
+      "text": [
+        "yImev pagh",
+        "ghogh HablI' DapoQchugh, yIyItbe'. ghotpu' He'Daq SoHtaHvIS yImev. vaj jIH yIlegh.",
+        "QIn lucholu'pu'mo' QIn potlhbe'."
+      ],
+      "items": [
+        {"label": "latlh"},
+        {"label": "chegh"}
+      ]
+    },
+    "P200": {
+      "text": [
+        "wa' Qu' neH",
+        "yIt Qu''e'. laD Qu''e'. wa' yIta'.",
+        "QoghDu'Daq vItlh. chon, Duj, ghot joq je DajlaHbe'."
+      ],
+      "items": [
+        {"label": "latlh"},
+        {"label": "chegh"}
+      ]
+    },
+    "P300": {
+      "text": [
+        "nuqDaq yIta'be'",
+        "letlhDaq pagh. HeHDaq pagh. QuS mI'mey HeHDaq pagh.",
+        "lojmIt, jonwI' qach, ghotpu' ghom je DajaHchugh, ghogh HablI' yIpol."
+      ],
+      "items": [
+        {"label": "latlh"},
+        {"label": "chegh"}
+      ]
+    },
+    "P400": {
+      "text": [
+        "yIngu'",
+        "HeHDaq SoHtaHvIS QIn luchol. chay' bIta'?"
+      ],
+      "quiz": {
+        "choices": [
+          {"label": "yImev, HeHvo' yIchegh, vaj yIlaD"},
+          {"label": "bIHeHtaHvIS yIlaD. QIn puS."},
+          {"label": "yIyIttaH 'ej ghogh yIjang"}
+        ]
+      }
+    },
+    "P900": {
+      "text": [
+        "rIntaH",
+        "yIleghpa' yIyItbe'. wa' Qu' neH. letlh, HeH, QuS mI'mey HeH je ghogh HablI' yIlo'be'.",
+        "ghojmeH paq naQ 'oH."
+      ],
+      "items": [
+        {"label": "HIDjolev"},
+        {"label": "chegh"}
+      ]
+    }
+  }
+}
