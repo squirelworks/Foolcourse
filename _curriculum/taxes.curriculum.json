@@ -7,9 +7,12 @@
     "deduction",
     "credits",
     "file_free",
-    "after"
+    "after",
+    "they_change",
+    "official",
+    "read_it"
   ],
   "extras": [],
   "root": "_courses",
-  "notes": "Example module. Tax year 2025, filed in 2026. Confirm figures on IRS.gov. Not tax advice."
+  "notes": "Example module. Tax year 2025, filed in 2026. they_change, official, and read_it teach that figures move and how to read IRS.gov. Not tax advice."
 }
