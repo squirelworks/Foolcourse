@@ -401,6 +401,15 @@ class Catalog:
             path,
         ]
         subprocess.Popen(cmd)
+        url = f"http://127.0.0.1:{self.port}/"
+        self.status.config(text=t(self.locale, "opened", url=url) if False else f"Course at {url}")
+        # Open from this process. The Foolbook child also tries, and that
+        # open fails on some desktops (Chrome zygote broken pipe).
+        try:
+            import webbrowser
+            webbrowser.open(url, new=2)
+        except Exception:
+            pass
 
 
 
