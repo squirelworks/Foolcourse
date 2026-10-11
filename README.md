@@ -59,3 +59,10 @@ Page visits and quiz answers are stored in `progress/progress.json`. Each course
 ## Foolbook
 
 Selecting a course launches [Foolbook](https://github.com/squirelworks/Foolbook). Foolcourse looks for `foolbook.py` beside itself, in a sibling `Foolbook/` checkout, or at the path in `FOOLBOOK`.
+
+## Other repositories
+
+Foolcourse does not import Foolversity or Foolbook.
+Foolversity writes `.fcs` and `.curriculum.json`. Foolcourse reads them.
+Foolbook is launched as a program and handed the student file.
+The contract is the files, not shared source.
