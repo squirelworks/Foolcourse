@@ -126,6 +126,7 @@ class Maker:
         self.root = tk.Tk()
         self.root.title("Curriculum maker")
         self.root.geometry("980x560")
+        self.root.minsize(720, 360)
         self._build()
         self._fill()
         self.root.mainloop()
@@ -144,18 +145,28 @@ class Maker:
         self.official_name.pack(side="left", padx=4)
         ttk.Button(bar, text="Save", command=self._save).pack(side="right")
 
+        frame = ttk.Frame(self.root)
+        frame.pack(fill="both", expand=True, padx=4, pady=4)
         cols = ("subject", "module", "course", "id", "role")
-        self.tree = ttk.Treeview(self.root, columns=cols, show="headings", selectmode="extended")
-        for key, label, width in (
-            ("subject", "Subject", 180),
-            ("module", "Module", 200),
-            ("course", "Course", 280),
-            ("id", "Id", 120),
-            ("role", "Role", 90),
-        ):
-            self.tree.heading(key, text=label)
-            self.tree.column(key, width=width)
-        self.tree.pack(fill="both", expand=True, padx=4, pady=4)
+        self.tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="extended")
+        self._col_weight = {"subject": 2, "module": 2, "course": 4, "id": 1, "role": 1}
+        self._col_min = {"subject": 90, "module": 90, "course": 160, "id": 70, "role": 64}
+        labels = {
+            "subject": "Subject", "module": "Module", "course": "Course",
+            "id": "Id", "role": "Role",
+        }
+        for key in cols:
+            self.tree.heading(key, text=labels[key])
+            self.tree.column(key, width=self._col_min[key], minwidth=self._col_min[key], stretch=True)
+        yscroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
+        xscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        yscroll.grid(row=0, column=1, sticky="ns")
+        xscroll.grid(row=1, column=0, sticky="ew")
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        frame.bind("<Configure>", self._fit_columns)
 
         bot = ttk.Frame(self.root, padding=4)
         bot.pack(fill="x")
@@ -163,6 +174,18 @@ class Maker:
         ttk.Button(bot, text="Mark extra", command=lambda: self._set(False)).pack(side="left", padx=4)
         self.status = ttk.Label(bot, text="")
         self.status.pack(side="left", padx=12)
+
+    def _fit_columns(self, _event=None):
+        width = self.tree.winfo_width()
+        if width <= 1:
+            return
+        weights = self._col_weight
+        mins = self._col_min
+        total_w = sum(weights.values()) or 1
+        spare = max(0, width - sum(mins.values()))
+        for key, weight in weights.items():
+            share = mins[key] + int(spare * weight / total_w)
+            self.tree.column(key, width=share)
 
     def _fill(self):
         for i in self.tree.get_children():

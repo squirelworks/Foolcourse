@@ -62,6 +62,7 @@ class Catalog:
         self.root = tk.Tk()
         self.root.title("Foolcourse")
         self.root.geometry("1040x560")
+        self.root.minsize(720, 360)
         self._build()
         self._reload()
         self.root.mainloop()
@@ -72,25 +73,48 @@ class Catalog:
         ttk.Button(bar, text="Courses folder", command=self._pick_root).pack(side="left")
         ttk.Button(bar, text="courses.xml", command=self._pick_xml).pack(side="left", padx=4)
         ttk.Button(bar, text="Refresh", command=self._reload).pack(side="left", padx=4)
-        self.heading = ttk.Label(bar, text="Foolcourse")
-        self.heading.pack(side="left", padx=12)
-        self.overall = ttk.Label(bar, text="")
+
+        info = ttk.Frame(self.root, padding=(4, 0, 4, 4))
+        info.pack(fill="x")
+        self.heading = ttk.Label(info, text="Foolcourse")
+        self.heading.pack(side="left")
+        self.overall = ttk.Label(info, text="")
         self.overall.pack(side="right")
 
+        frame = ttk.Frame(self.root)
+        frame.pack(fill="both", expand=True, padx=4, pady=(0, 4))
         cols = ("subject", "module", "course", "id", "progress", "score", "track")
-        self.tree = ttk.Treeview(self.root, columns=cols, show="headings", selectmode="browse")
-        for key, label, width in (
-            ("subject", "Subject", 180),
-            ("module", "Module", 220),
-            ("course", "Course", 260),
-            ("id", "Id", 110),
-            ("progress", "Progress", 80),
-            ("score", "Score", 90),
-            ("track", "Track", 90),
-        ):
-            self.tree.heading(key, text=label)
-            self.tree.column(key, width=width)
-        self.tree.pack(fill="both", expand=True, padx=4, pady=4)
+        self.tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
+        # Weight is the share of spare width. Course gets the most so titles fit.
+        self._col_weight = {
+            "subject": 2, "module": 2, "course": 4,
+            "id": 1, "progress": 1, "score": 1, "track": 1,
+        }
+        self._col_min = {
+            "subject": 90, "module": 90, "course": 160,
+            "id": 70, "progress": 72, "score": 56, "track": 64,
+        }
+        labels = {
+            "subject": "Subject", "module": "Module", "course": "Course",
+            "id": "Id", "progress": "Progress", "score": "Score", "track": "Track",
+        }
+        for key in cols:
+            self.tree.heading(key, text=labels[key])
+            self.tree.column(
+                key,
+                width=self._col_min[key],
+                minwidth=self._col_min[key],
+                stretch=True,
+            )
+        yscroll = ttk.Scrollbar(frame, orient="vertical", command=self.tree.yview)
+        xscroll = ttk.Scrollbar(frame, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=yscroll.set, xscrollcommand=xscroll.set)
+        self.tree.grid(row=0, column=0, sticky="nsew")
+        yscroll.grid(row=0, column=1, sticky="ns")
+        xscroll.grid(row=1, column=0, sticky="ew")
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        frame.bind("<Configure>", self._fit_columns)
         self.tree.bind("<Double-1>", lambda _e: self._launch())
 
         bot = ttk.Frame(self.root, padding=4)
@@ -98,6 +122,19 @@ class Catalog:
         ttk.Button(bot, text="Open in Foolbook", command=self._launch).pack(side="left")
         self.status = ttk.Label(bot, text="")
         self.status.pack(side="left", padx=12)
+
+    def _fit_columns(self, _event=None):
+        """Give each column a share of the visible width. Course gets the most."""
+        width = self.tree.winfo_width()
+        if width <= 1:
+            return
+        weights = self._col_weight
+        mins = self._col_min
+        total_w = sum(weights.values()) or 1
+        spare = max(0, width - sum(mins.values()))
+        for key, weight in weights.items():
+            share = mins[key] + int(spare * weight / total_w)
+            self.tree.column(key, width=share)
 
     def _pick_root(self):
         p = filedialog.askdirectory(title="Courses folder")
