@@ -1,0 +1,118 @@
+{
+  "id": "after",
+  "title": "After you file",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "format": "json",
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "After you file",
+        "Filing is not the end. You wait, you check, and you keep the papers.",
+        "Keep the return and the forms for at least three years. That is the usual window for a refund claim or an IRS question."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "Track the refund",
+        "Where's My Refund on IRS.gov is the official tracker. Direct deposit is faster than a check.",
+        "If you claimed the EITC or the Additional Child Tax Credit, do not expect a refund before mid-February."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P0"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "If you owe",
+        "Pay by the April due date even if you extend the filing. IRS.gov/Payments takes a bank account, card, or a plan.",
+        "A payment plan is interest and a fee. It is still better than ignoring a balance."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "A mistake",
+        "File an amended return on Form 1040-X if you left out a W-2 or claimed the wrong credit.",
+        "If you never filed and you are due a refund, you generally have three years from the original due date to claim it."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Check",
+        "You filed, claimed the EITC, and it is January 28. The refund has not arrived. What is true?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "EITC refunds are held until mid-February. Check Where's My Refund.",
+            "correct": true
+          },
+          {
+            "label": "The IRS lost it. File again today.",
+            "correct": false
+          },
+          {
+            "label": "A refund with the EITC arrives in three days.",
+            "correct": false
+          }
+        ],
+        "again": "P100",
+        "next": "P900"
+      }
+    },
+    {
+      "id": "P900",
+      "text": [
+        "Done",
+        "Track it on Where's My Refund. Pay a balance by April. Amend if you were wrong.",
+        "Keep the papers three years. This course is a map, not a preparer."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P400"
+        }
+      ]
+    }
+  ],
+  "notes": "Example course. Tax year 2025 figures, filed in 2026. Confirm on IRS.gov. Not tax advice."
+}

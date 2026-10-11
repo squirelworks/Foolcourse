@@ -1,0 +1,15 @@
+{
+  "name": "Money",
+  "official_name": "Filing taxes",
+  "official": [
+    "do_i_file",
+    "papers",
+    "deduction",
+    "credits",
+    "file_free",
+    "after"
+  ],
+  "extras": [],
+  "root": "_courses",
+  "notes": "Example module. Tax year 2025, filed in 2026. Confirm figures on IRS.gov. Not tax advice."
+}
