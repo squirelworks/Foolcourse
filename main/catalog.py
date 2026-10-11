@@ -108,6 +108,9 @@ def _from_folders(root: Path) -> dict:
         # A .json next to an .fbk is the working copy. List the book once.
         if book.suffix.lower() == ".json" and book.with_suffix(".fbk").exists():
             continue
+        # <stem>.<locale>.json is an overlay, not a course.
+        if book.suffix.lower() == ".json" and "." in book.stem:
+            continue
         rel = book.relative_to(root)
         parts = list(rel.parts)
         # subject / module / book, or module / book, or just book
