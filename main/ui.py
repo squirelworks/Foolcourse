@@ -57,13 +57,14 @@ def _row_style(root):
     style.configure("Treeview.Heading", font=font, padding=(4, 6))
 
 class Catalog:
-    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None):
+    def __init__(self, root: Path, xml_path: Path | None = None, curriculum: Path | None = None, port: int = 1337):
         if tk is None:
             print("Tkinter is required for the Foolcourse window.")
             raise SystemExit(1)
         self.courses_root = Path(root)
         self.xml_path = Path(xml_path) if xml_path else None
         self.curriculum_path = Path(curriculum) if curriculum else None
+        self.port = port
         self.curriculum: dict | None = None
         self.progress = Progress(default_path())
         self.catalog: dict = {"title": "Foolcourse", "subjects": []}
@@ -251,5 +252,5 @@ class Catalog:
                 "Put Foolbook next to Foolcourse, or set FOOLBOOK.",
             )
             return
-        cmd = [sys.executable, str(foolbook), path]
+        cmd = [sys.executable, str(foolbook), "--port", str(self.port), path]
         subprocess.Popen(cmd)

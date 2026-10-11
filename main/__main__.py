@@ -26,6 +26,7 @@ def main(argv: list[str] | None = None) -> int:
     making = False
     xml_path = None
     curriculum_path = None
+    port = 1337
     rest: list[str] = []
     i = 0
     while i < len(argv):
@@ -39,6 +40,16 @@ def main(argv: list[str] | None = None) -> int:
             i += 1
         elif a == "--curriculum" and i + 1 < len(argv):
             curriculum_path = Path(argv[i + 1])
+            i += 1
+        elif a == "--port" and i + 1 < len(argv):
+            try:
+                port = int(argv[i + 1])
+            except ValueError:
+                print(f"--port needs a number, got {argv[i + 1]}")
+                return 2
+            if not 1 <= port <= 65535:
+                print(f"--port out of range: {port}")
+                return 2
             i += 1
         else:
             rest.append(a)
@@ -60,7 +71,7 @@ def main(argv: list[str] | None = None) -> int:
     if listing:
         return _print(catalog, curriculum)
     from main.ui import Catalog
-    Catalog(root, xml_path, curriculum_path)
+    Catalog(root, xml_path, curriculum_path, port)
     return 0
 
 
