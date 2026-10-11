@@ -19,8 +19,8 @@ except ImportError:
     tk = None
 
 from progress.progress import Progress, default_path
-from foolcourse.catalog import official_ids, scan
-from foolcourse.curriculum import apply, load as load_curriculum
+from main.catalog import official_ids, scan
+from main.curriculum import apply, load as load_curriculum
 
 
 

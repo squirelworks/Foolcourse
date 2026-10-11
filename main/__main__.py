@@ -15,8 +15,8 @@ _root = Path(__file__).resolve().parents[1]
 if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
-from foolcourse.catalog import official_ids, scan
-from foolcourse.curriculum import apply, load as load_curriculum
+from main.catalog import official_ids, scan
+from main.curriculum import apply, load as load_curriculum
 from progress.progress import Progress, default_path
 
 
@@ -46,7 +46,7 @@ def main(argv: list[str] | None = None) -> int:
 
     root = Path(rest[0]) if rest else _default_root()
     if making:
-        from foolcourse.curriculum import Maker
+        from main.curriculum import Maker
         out = Path(rest[1]) if len(rest) > 1 else root / "curriculum.json"
         Maker(root, xml_path, out)
         return 0
@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
         apply(catalog, curriculum)
     if listing:
         return _print(catalog, curriculum)
-    from foolcourse.ui import Catalog
+    from main.ui import Catalog
     Catalog(root, xml_path, curriculum_path)
     return 0
 

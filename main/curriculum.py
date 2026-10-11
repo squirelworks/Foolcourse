@@ -26,7 +26,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from foolcourse.catalog import official_ids, scan
+from main.catalog import official_ids, scan
 
 
 def load(path: Path) -> dict:
