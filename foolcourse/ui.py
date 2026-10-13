@@ -499,20 +499,12 @@ class Catalog:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
-        # Publish the path. Foolbook loads the book itself.
-        self._current_path = path
-        self._current_book = {"path": path, "course": cid}
-        if not self._start_course_server():
-            messagebox.showinfo(t(self.locale, "app"), "Could not start the course server.")
-            return
+        # Launch native Foolbook with the book path. No server.
         foolbook = _find_foolbook()
         if foolbook is None:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
             return
-        # Tell Foolbook to fetch from the course server
-        url = f"http://127.0.0.1:{self.port}/"
-        cmd = [sys.executable, str(foolbook), "--from", url, "--course", cid]
-        # Replace any running viewer so the new book loads
+        cmd = [sys.executable, str(foolbook), path, "--course", cid]
         if self._viewer and self._viewer.poll() is None:
             self._viewer.terminate()
             try:
@@ -522,7 +514,7 @@ class Catalog:
         self._viewer = subprocess.Popen(cmd)
         self.progress.touch(cid)
         self._fill_courses()
-        self.status.config(text=f"Course at {url}")
+        self.status.config(text=f"Opened {cid}")
 
 
 
