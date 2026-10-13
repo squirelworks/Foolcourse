@@ -26,6 +26,8 @@ from foolcourse.progress.progress import Progress, default_path, student_path
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(argv if argv is not None else sys.argv[1:])
+    if "--freshstart" in argv:
+        return _freshstart()
     listing = False
     making = False
     debug = False
@@ -108,6 +110,16 @@ def main(argv: list[str] | None = None) -> int:
     from foolcourse.ui import Catalog
     Catalog(root, xml_path, curriculum_path, port, student, theme, locale, debug)
     return 0
+
+
+def _freshstart() -> int:
+    """Force-reinstall Foolcourse and everything under it."""
+    import subprocess
+    cmd = [
+        sys.executable, "-m", "pip", "install", "--force-reinstall",
+        "git+https://github.com/squirelworks/Foolcourse.git@v1.0.0r1",
+    ]
+    return subprocess.call(cmd)
 
 
 def _here() -> Path:
