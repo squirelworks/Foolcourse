@@ -499,16 +499,9 @@ class Catalog:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
-        # Load the book and publish it
-        try:
-            from engine.loader import load
-            from viewer.gui import book_to_json
-            book = load(path)
-            self._current_book = book_to_json(book, self.progress, cid)
-            self._current_path = path
-        except Exception as e:
-            messagebox.showwarning(t(self.locale, "app"), f"Could not load: {e}")
-            return
+        # Publish the path. Foolbook loads the book itself.
+        self._current_path = path
+        self._current_book = {"path": path, "course": cid}
         if not self._start_course_server():
             messagebox.showinfo(t(self.locale, "app"), "Could not start the course server.")
             return
