@@ -428,7 +428,7 @@ class Catalog:
         """Start the Foolbook server once. True if it is up."""
         if not self._port_free():
             return True
-        cmd = [sys.executable, str(foolbook), "--port", str(self.port)]
+        cmd = [sys.executable, str(foolbook), "--server", "--port", str(self.port)]
         self._viewer = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         for _ in range(30):
             if not self._port_free():
