@@ -402,17 +402,17 @@ class Catalog:
             s.close()
 
     def _stop_viewer(self) -> bool:
-        """Stop the viewer we started. False if the port is held by someone else."""
+        """Stop the viewer we started. True if the port is free afterward."""
         proc = getattr(self, "_viewer", None)
-        if proc is None or proc.poll() is not None:
-            return False
-        proc.terminate()
-        try:
-            proc.wait(timeout=3)
-        except Exception:
-            proc.kill()
+        if proc is not None and proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=3)
+            except Exception:
+                proc.kill()
+                proc.wait(timeout=1)
         self._viewer = None
-        for _ in range(20):
+        for _ in range(30):
             if self._port_free():
                 return True
             import time
@@ -445,12 +445,11 @@ class Catalog:
         ]
         url = f"http://127.0.0.1:{self.port}/"
         if not self._port_free():
-            # A viewer is already up. If we started it, replace it with
-            # this course. If we did not, say so and do not spawn another.
+            # Replace the viewer we started. If the port stays held, say so.
             if not self._stop_viewer():
                 messagebox.showinfo(
                     t(self.locale, "app"),
-                    f"A viewer is already on port {self.port}.\nClose it, or finish the open course.",
+                    f"Port {self.port} is still in use.\nClose the other viewer, or wait a moment and try again.",
                 )
                 return
         self._viewer = subprocess.Popen(cmd)
