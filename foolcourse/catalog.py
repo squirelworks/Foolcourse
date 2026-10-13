@@ -108,6 +108,10 @@ def _from_folders(root: Path) -> dict:
         # A .json next to an .fbk is the working copy. List the book once.
         if book.suffix.lower() == ".json" and book.with_suffix(".fbk").exists():
             continue
+        # A .tbk next to an .fbk or .json is the legacy copy. List the book once.
+        if book.suffix.lower() == ".tbk":
+            if book.with_suffix(".fbk").exists() or book.with_suffix(".json").exists():
+                continue
         # <stem>.<locale>.json is an overlay, not a course.
         if book.suffix.lower() == ".json" and "." in book.stem:
             continue
