@@ -1,0 +1,3 @@
+[submodule "Foolbook"]
+	path = Foolbook
+	url = https://github.com/squirelworks/Foolbook.git
