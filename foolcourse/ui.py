@@ -519,11 +519,14 @@ class Catalog:
         # Tell Foolbook to fetch from the course server
         url = f"http://127.0.0.1:{self.port}/"
         cmd = [sys.executable, str(foolbook), "--from", url, "--course", cid]
+        # Replace any running viewer so the new book loads
         if self._viewer and self._viewer.poll() is None:
-            # Already running; it will pick up the new book on reload
-            pass
-        else:
-            self._viewer = subprocess.Popen(cmd)
+            self._viewer.terminate()
+            try:
+                self._viewer.wait(timeout=2)
+            except Exception:
+                self._viewer.kill()
+        self._viewer = subprocess.Popen(cmd)
         self.progress.touch(cid)
         self._fill_courses()
         self.status.config(text=f"Course at {url}")
