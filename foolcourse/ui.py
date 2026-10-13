@@ -434,8 +434,6 @@ class Catalog:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
-        self.progress.touch(cid)
-        self._fill_courses()
         foolbook = _find_foolbook()
         if foolbook is None:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
@@ -450,7 +448,6 @@ class Catalog:
         ]
         url = f"http://127.0.0.1:{self.port}/"
         if not self._port_free():
-            # Replace the viewer we started. If the port stays held, say so.
             if not self._stop_viewer():
                 messagebox.showinfo(
                     t(self.locale, "app"),
@@ -458,6 +455,8 @@ class Catalog:
                 )
                 return
         self._viewer = subprocess.Popen(cmd)
+        self.progress.touch(cid)
+        self._fill_courses()
         self.status.config(text=f"Course at {url}")
 
 
