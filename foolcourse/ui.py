@@ -424,31 +424,70 @@ class Catalog:
             time.sleep(0.1)
         return self._port_free()
 
-    def _ensure_server(self, foolbook):
+    def _start_course_server(self):
+        """Foolcourse serves the current book. Foolbook fetches from here."""
         if not self._port_free():
             return True
-        cmd = [sys.executable, str(foolbook), "--server", "--port", str(self.port)]
-        self._viewer = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        for _ in range(40):
-            if not self._port_free():
-                return True
-            import time
-            time.sleep(0.1)
-        return False
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        import json as _json
+        from urllib.parse import urlparse, parse_qs
 
-    def _load_course(self, path, cid):
-        import urllib.parse, urllib.request
-        q = urllib.parse.urlencode({
-            "path": path,
-            "student": str(self.progress.path),
-            "locale": self.locale,
-            "course": cid,
-        })
+        catalog = self
+
+        class H(BaseHTTPRequestHandler):
+            def log_message(self, *a):
+                pass
+            def do_GET(self):
+                u = urlparse(self.path)
+                if u.path == "/api/book":
+                    book = getattr(catalog, "_current_book", None)
+                    if not book:
+                        self.send_response(404)
+                        self.end_headers()
+                        return
+                    body = _json.dumps(book).encode()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                elif u.path == "/api/visit":
+                    q = parse_qs(u.query)
+                    page = (q.get("page") or [""])[0]
+                    cid = (q.get("course") or [""])[0] or ""
+                    if page and cid:
+                        catalog.progress.mark_page(cid, page)
+                    self.send_response(204)
+                    self.end_headers()
+                elif u.path == "/api/finish":
+                    q = parse_qs(u.query)
+                    cid = (q.get("course") or [""])[0]
+                    if cid:
+                        catalog.progress.complete(cid)
+                    body = b'{"ok":true}'
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                elif u.path == "/api/current":
+                    body = _json.dumps({"path": getattr(catalog, "_current_path", "")}).encode()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                else:
+                    self.send_response(404)
+                    self.end_headers()
+
         try:
-            with urllib.request.urlopen(f"http://127.0.0.1:{self.port}/api/load?{q}", timeout=5) as r:
-                return r.status == 200
-        except Exception:
+            self._course_httpd = ThreadingHTTPServer(("127.0.0.1", self.port), H)
+        except OSError:
             return False
+        import threading
+        threading.Thread(target=self._course_httpd.serve_forever, daemon=True).start()
+        return True
 
     def _launch(self):
         row = self._selected()
@@ -460,22 +499,34 @@ class Catalog:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
+        # Load the book and publish it
+        try:
+            from engine.loader import load
+            from viewer.gui import book_to_json
+            book = load(path)
+            self._current_book = book_to_json(book, self.progress, cid)
+            self._current_path = path
+        except Exception as e:
+            messagebox.showwarning(t(self.locale, "app"), f"Could not load: {e}")
+            return
+        if not self._start_course_server():
+            messagebox.showinfo(t(self.locale, "app"), "Could not start the course server.")
+            return
         foolbook = _find_foolbook()
         if foolbook is None:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
             return
-        if not self._ensure_server(foolbook):
-            messagebox.showinfo(t(self.locale, "app"), "Could not start the viewer.")
-            return
-        if not self._load_course(path, cid):
-            messagebox.showinfo(t(self.locale, "app"), "Could not load the course.")
-            return
+        # Tell Foolbook to fetch from the course server
+        url = f"http://127.0.0.1:{self.port}/"
+        cmd = [sys.executable, str(foolbook), "--from", url, "--course", cid]
+        if self._viewer and self._viewer.poll() is None:
+            # Already running; it will pick up the new book on reload
+            pass
+        else:
+            self._viewer = subprocess.Popen(cmd)
         self.progress.touch(cid)
         self._fill_courses()
-        url = f"http://127.0.0.1:{self.port}/"
         self.status.config(text=f"Course at {url}")
-        import webbrowser
-        webbrowser.open(url)
 
 
 
