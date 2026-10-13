@@ -95,6 +95,7 @@ class Catalog:
         self.root.title(t(self.locale, "app"))
         self.root.geometry("1040x560")
         self.root.minsize(720, 360)
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         _row_style(self.root)
         self._build()
         self._reload()
@@ -400,6 +401,10 @@ class Catalog:
             return False
         finally:
             s.close()
+
+    def _on_close(self):
+        self._stop_viewer()
+        self.root.destroy()
 
     def _stop_viewer(self) -> bool:
         """Stop the viewer we started. True if the port is free afterward."""
