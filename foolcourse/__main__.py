@@ -21,7 +21,7 @@ if str(_root) not in sys.path:
 
 from foolcourse.catalog import official_ids, scan
 from foolcourse.curriculum import apply, load as load_curriculum
-from progress.progress import Progress, default_path, student_path
+from foolcourse.progress.progress import Progress, default_path, student_path
 
 
 def main(argv: list[str] | None = None) -> int:

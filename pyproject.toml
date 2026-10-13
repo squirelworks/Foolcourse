@@ -17,7 +17,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["foolcourse*", "progress*"]
+include = ["foolcourse*"]
 
 [tool.setuptools.package-data]
 foolcourse = ["_courses/**/*"]

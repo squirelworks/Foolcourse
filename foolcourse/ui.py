@@ -18,7 +18,7 @@ try:
 except ImportError:
     tk = None
 
-from progress.progress import Progress, default_path, student_path
+from foolcourse.progress.progress import Progress, default_path, student_path
 from foolcourse.catalog import official_ids, scan
 from foolcourse.locale import t
 from foolcourse.curriculum import apply, load as load_curriculum
