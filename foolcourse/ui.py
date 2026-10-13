@@ -424,6 +424,37 @@ class Catalog:
             time.sleep(0.1)
         return self._port_free()
 
+    def _ensure_server(self, foolbook: Path) -> bool:
+        """Start the Foolbook server once. True if it is up."""
+        if not self._port_free():
+            return True
+        cmd = [sys.executable, str(foolbook), "--port", str(self.port)]
+        self._viewer = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(30):
+            if not self._port_free():
+                return True
+            import time
+            time.sleep(0.1)
+        return not self._port_free()
+
+    def _load_course(self, path: str, cid: str) -> bool:
+        """Tell the running server to switch to this course."""
+        import urllib.parse
+        import urllib.request
+        q = urllib.parse.urlencode({
+            "path": path,
+            "student": str(self.progress.path),
+            "locale": self.locale,
+            "course": cid,
+            "s": "default",
+        })
+        url = f"http://127.0.0.1:{self.port}/api/load?{q}"
+        try:
+            with urllib.request.urlopen(url, timeout=5) as r:
+                return r.status == 200
+        except Exception:
+            return False
+
     def _launch(self):
         row = self._selected()
         if not row:
@@ -438,26 +469,20 @@ class Catalog:
         if foolbook is None:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
             return
-        cmd = [
-            sys.executable, str(foolbook),
-            "--port", str(self.port),
-            "--student", str(self.progress.path),
-            "--locale", self.locale,
-            "--course", cid,
-            path,
-        ]
-        url = f"http://127.0.0.1:{self.port}/"
-        if not self._port_free():
-            if not self._stop_viewer():
-                messagebox.showinfo(
-                    t(self.locale, "app"),
-                    f"Port {self.port} is still in use.\nClose the other viewer, or wait a moment and try again.",
-                )
-                return
-        self._viewer = subprocess.Popen(cmd)
+        if not self._ensure_server(foolbook):
+            messagebox.showinfo(t(self.locale, "app"), "Could not start the viewer.")
+            return
+        if not self._load_course(path, cid):
+            messagebox.showinfo(t(self.locale, "app"), "Could not load the course.")
+            return
         self.progress.touch(cid)
         self._fill_courses()
+        url = f"http://127.0.0.1:{self.port}/"
         self.status.config(text=f"Course at {url}")
+        # Open browser only if this is a fresh server
+        if self._viewer and self._viewer.poll() is None:
+            import webbrowser
+            webbrowser.open(url)
 
 
 
