@@ -39,11 +39,9 @@ change to the standard, agreed in writing, not a shared import.
 2. A curriculum file marks which course ids are official.
 3. The window lists subjects, modules, and courses. Official and extra
    are both shown. The overall counts only the official list.
-4. Open launches Foolbook with the book path, the student file, the
-   locale, the course id, and the port.
-5. Foolbook serves the book on `127.0.0.1:1337` and opens it.
-6. Finish in the viewer writes the score back to the `.fcs`.
+4. Open launches Foolbook with the book path and `--course`. Foolcourse
+   does not serve the book.
+5. Finish in the viewer writes the score back to the `.fcs`.
 
 One viewer. The next Open stops the viewer Foolcourse started and
-starts the next course. If the port is held by something else,
-Foolcourse says so and does not spawn another.
+starts the next course.

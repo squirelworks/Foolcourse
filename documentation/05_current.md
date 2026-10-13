@@ -1,22 +1,26 @@
 # Current state
 
-Foolcourse v0.9.0. Foolversity v0.9.0. Foolbook v1.0.0r1.
-Released 12 October 2026.
+Foolcourse 1.0.0r2. Foolversity v0.9.0. Foolbook v1.0.0r1, with later
+commits that Foolcourse now launches directly.
 
 ## Foolcourse does
 
 - Catalogs `_courses/` or a folder it is given
 - Lists by subject and module
 - Loads a curriculum file and treats its list as official
-- Opens the selected book in Foolbook
-- Keeps one viewer. The next Open replaces it
+- Opens the selected book by launching Foolbook with the book path.
+  No server of its own
+- Keeps one viewer. The next Open stops it and starts the next course
 - Saves progress and a score per course in an encrypted `.fcs`
 - Computes an overall from the official list only
 - `--locale`, passed through to Foolbook. `klingon` is accepted
-- `--theme modern` for a window that is not the Win95 look
-- `--port`, default 1337
+- `--theme modern`
 - `--student` names the `.fcs`
 - `--make` opens the curriculum maker
+- `--doctor` writes diagnostics
+- `--freshstart` clears progress for a clean run
+- `_debug/` holds diagnostic dumps
+- Package is `foolcourse`. The old `main` name is gone
 
 ## Foolversity does
 
@@ -28,18 +32,14 @@ Released 12 October 2026.
 
 - Opens `.fbk` and `.tbk`
 - Follows next, back, and goto
-- Serves a browser viewer on port 1337
+- Serves its own viewer when run on its own
 - Finish records the quiz, marks the course complete, saves the score
 - Applies a course locale overlay when the course has one
 - Compiles OpenScript and can export a `.tbk` shell
-- Opens the viewer with xdg-open. Chrome is the fallback
 
 ## Known rough edges
 
 - The `.fcs` password is a placeholder.
 - Locale overlay files must not be listed as courses. The catalog skips
   `*.klingon.json`. A new locale must be skipped the same way.
-- The browser open fails on some desktops when Chrome is called
-  directly. xdg-open is the path that works.
-- A port held by a process Foolcourse did not start is reported, not
-  killed.
+- A viewer Foolcourse did not start is left alone.
