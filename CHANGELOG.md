@@ -23,3 +23,11 @@ Depends on Foolbook 1.0.1.
 ## 0.9.0
 
 First release.
+
+## 1.0.0r2
+
+- Launches native Foolbook with book path; no server
+- Ships example courses
+- --freshstart and --doctor
+- _debug/ dumps diagnostics
+
