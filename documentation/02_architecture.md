@@ -45,3 +45,11 @@ change to the standard, agreed in writing, not a shared import.
 
 One viewer. The next Open stops the viewer Foolcourse started and
 starts the next course.
+
+
+## Foollege
+
+A foollege sits under Foolversity and owns courses. Foolcourse reads a
+`.foollege.json` with `--foollege` and drops every course it does not
+own. A curriculum still decides which of the remaining courses are
+official. The two files do different jobs.
