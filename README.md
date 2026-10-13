@@ -68,3 +68,7 @@ Foolcourse does not import Foolversity or Foolbook.
 Foolversity writes `.fcs` and `.curriculum.json`. Foolcourse reads them.
 Foolbook is launched as a program and handed the student file.
 The contract is the files, not shared source.
+
+## Documentation
+
+`documentation/` is the project record: intent, architecture, formats, and where it is going. Start at `documentation/00_index.md`.
