@@ -30,7 +30,13 @@ def _find_foolbook() -> Path | None:
     import os
     # Installed package
     try:
-        import foolbook
+        from importlib.metadata import version
+        try:
+            _installed = version("foolbook")
+        except Exception:
+            _installed = ""
+        if _installed != "1.0.1r2":
+            import foolbook  # installed build is not the current stable
         p = Path(foolbook.__file__).resolve()
         if p.name == "__init__.py":
             p = p.parent / "__main__.py"
