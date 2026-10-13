@@ -1,5 +1,7 @@
 # Foolcourse
 
+Version 1.0.0. Depends on Foolbook 1.0.1.
+
 A course platform. It catalogs a courses folder and opens the selected
 course in Foolbook.
 
