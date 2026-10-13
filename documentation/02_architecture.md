@@ -47,9 +47,11 @@ One viewer. The next Open stops the viewer Foolcourse started and
 starts the next course.
 
 
-## Foollege
+## Place in the stack
 
-A foollege sits under Foolversity and owns courses. Foolcourse reads a
-`.foollege.json` with `--foollege` and drops every course it does not
-own. A curriculum still decides which of the remaining courses are
-official. The two files do different jobs.
+Foolversity holds the courses.
+Foollege holds the students.
+Foolcourse holds the instruction.
+Foolbook opens the book.
+
+A curriculum is figured out on its own. OpenScript lets an old ToolBook be reused.

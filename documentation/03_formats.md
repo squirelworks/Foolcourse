@@ -31,12 +31,6 @@ Names a curriculum and its official list.
 found in the courses folder is extra, whether or not it is named in
 `extras`.
 
-## .foollege.json
-
-Names the courses a foollege owns. Foolversity writes it. Foolcourse
-reads it with `--foollege` and scopes the catalog to those courses.
-It does not mark official. A curriculum does that.
-
 ## .school.json
 
 Foolversity only. An id, a name, the curricula it offers, the students

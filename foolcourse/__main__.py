@@ -1,7 +1,6 @@
 """Foolcourse entry.
 
   python3 -m foolcourse                         # _courses/ with _curriculum/
-  python3 -m foolcourse --foollege money.foollege.json
   python3 -m foolcourse path/to/courses         # catalog that folder
   python3 -m foolcourse path/to/courses --xml courses.xml
   python3 -m foolcourse --list path/to/courses  # print, no window
@@ -39,7 +38,6 @@ def main(argv: list[str] | None = None) -> int:
     debug = False
     xml_path = None
     curriculum_path = None
-    foollege_path = None
     port = 1337
     theme = "classic"
     student = None
@@ -60,9 +58,6 @@ def main(argv: list[str] | None = None) -> int:
             i += 1
         elif a == "--curriculum" and i + 1 < len(argv):
             curriculum_path = Path(argv[i + 1])
-            i += 1
-        elif a == "--foollege" and i + 1 < len(argv):
-            foollege_path = Path(argv[i + 1])
             i += 1
         elif a == "--theme" and i + 1 < len(argv):
             theme = argv[i + 1].strip().lower()
@@ -100,9 +95,6 @@ def main(argv: list[str] | None = None) -> int:
         Maker(root, xml_path, out, theme=theme)
         return 0
     catalog = scan(root, xml_path)
-    if foollege_path and foollege_path.exists():
-        from foolcourse.foollege import load as load_foollege, apply as apply_foollege
-        apply_foollege(catalog, load_foollege(foollege_path))
     curriculum = None
     if curriculum_path and curriculum_path.exists():
         curriculum = load_curriculum(curriculum_path)
