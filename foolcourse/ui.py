@@ -26,8 +26,19 @@ from foolcourse.curriculum import apply, load as load_curriculum
 
 
 def _find_foolbook() -> Path | None:
-    """Locate foolbook.py. Sibling checkout, FOOLBOOK, or this tree."""
+    """Locate foolbook. Installed package, FOOLBOOK, or sibling checkout."""
     import os
+    # Installed package
+    try:
+        import foolbook
+        p = Path(foolbook.__file__).resolve()
+        if p.name == "__init__.py":
+            p = p.parent / "__main__.py"
+        if p.exists():
+            return p
+    except ImportError:
+        pass
+    # Env override
     env = os.environ.get("FOOLBOOK")
     if env:
         p = Path(env)
@@ -35,6 +46,7 @@ def _find_foolbook() -> Path | None:
             p = p / "foolbook.py"
         if p.exists():
             return p
+    # Sibling checkout
     here = Path(__file__).resolve().parents[1]
     candidates = [
         here / "foolbook.py",

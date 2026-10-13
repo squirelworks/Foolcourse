@@ -1,0 +1,118 @@
+{
+  "id": "do_i_file",
+  "title": "Do I have to file?",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "format": "json",
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "Do I have to file?",
+        "A short course on whether the average worker needs a 2025 federal return.",
+        "Figures are for tax year 2025, filed in 2026. They change. Check IRS.gov."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "The usual test",
+        "Most people file if their gross income is at least the standard deduction for their status.",
+        "Single, under 65: $15,750. Married filing jointly, both under 65: $31,500. Head of household, under 65: $23,625."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P0"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "Exceptions that still require a return",
+        "Self-employment net earnings of $400 or more: file, even if wages are low.",
+        "Married filing separately: file if gross income is $5 or more. Advance premium tax credit: file. You want a refund of withholding: file."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "Filing status is set on December 31",
+        "Single, married filing jointly, married filing separately, head of household, or qualifying surviving spouse.",
+        "Head of household is not a vibe. You must be unmarried, pay more than half the cost of the home, and have a qualifying person."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Check",
+        "You are single, under 65, and your only income is $14,000 in wages. Must you file?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "No. $14,000 is under the $15,750 single threshold.",
+            "correct": true
+          },
+          {
+            "label": "Yes. Everyone with a job must file.",
+            "correct": false
+          },
+          {
+            "label": "Yes. The threshold for single is $5.",
+            "correct": false
+          }
+        ],
+        "again": "P100",
+        "next": "P900"
+      }
+    },
+    {
+      "id": "P900",
+      "text": [
+        "Done",
+        "File if you are over the threshold, have $400 of self-employment earnings, are married filing separately, or want a refund.",
+        "Status is decided on December 31. Confirm the year's numbers on IRS.gov."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P400"
+        }
+      ]
+    }
+  ],
+  "notes": "Example course. Tax year 2025 figures, filed in 2026. Confirm on IRS.gov. Not tax advice."
+}

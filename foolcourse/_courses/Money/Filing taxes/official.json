@@ -1,0 +1,118 @@
+{
+  "id": "official",
+  "title": "Where the official numbers live",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "format": "json",
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "Where the official numbers live",
+        "IRS.gov is the source. Everything else is a retelling.",
+        "A retelling can be useful. It is not the number you file with."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "The pages that matter",
+        "Standard deduction and brackets: the IRS news release on inflation adjustments, and Publication 17.",
+        "EITC: the Earned Income Tax Credit page and the EITC Assistant. Free File: the Free File page on IRS.gov, not a company's homepage."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P0"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "How to get there",
+        "Type the address. IRS.gov/FreeFile. IRS.gov/EITC. IRS.gov/VITA.",
+        "Do not click a search ad. Ads buy the words 'free file' and 'IRS'. The real page is the one whose address is irs.gov."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "What an official page looks like",
+        "It is on irs.gov. It names a tax year. It has a form number or a publication number if it is giving a rule.",
+        "Publication 17 is the plain-language book. The form instructions are the filing rules. A news release announces a change. A blog announces nothing."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Check",
+        "You want the Free File income limit. Where do you start?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "IRS.gov/FreeFile, typed in, not a search ad.",
+            "correct": true
+          },
+          {
+            "label": "The first result for 'free tax filing'.",
+            "correct": false
+          },
+          {
+            "label": "A preparer's homepage that says IRS approved.",
+            "correct": false
+          }
+        ],
+        "again": "P200",
+        "next": "P900"
+      }
+    },
+    {
+      "id": "P900",
+      "text": [
+        "Done",
+        "irs.gov for the number. Publication 17 and the form instructions for the rule. The EITC Assistant to check a credit.",
+        "If the address is not irs.gov, it is someone else's summary."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P400"
+        }
+      ]
+    }
+  ],
+  "notes": "Example course. Teaches that figures change and how to read IRS.gov. Not tax advice."
+}

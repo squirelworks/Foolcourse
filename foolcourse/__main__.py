@@ -115,6 +115,11 @@ def _here() -> Path:
 
 
 def _default_root() -> Path:
+    # Shipped with the package
+    pkg = Path(__file__).resolve().parent / "_courses"
+    if pkg.exists():
+        return pkg
+    # Sibling checkout
     here = _here()
     for name in ("_courses", "courses"):
         p = here / name

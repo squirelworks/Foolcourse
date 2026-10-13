@@ -1,0 +1,118 @@
+{
+  "id": "file_free",
+  "title": "File for free",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "format": "json",
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "File for free",
+        "Most working people do not need to pay a preparer.",
+        "Start at IRS.gov. A search ad that says free often is not."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "IRS Free File",
+        "If your 2025 adjusted gross income is $89,000 or less, guided software is free through IRS Free File.",
+        "You must start from the Free File page on IRS.gov. Opening a company's site directly can put you on a paid product."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P0"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "VITA and TCE",
+        "VITA is free in-person help, generally for people who earned $69,000 or less, or who have a disability or limited English.",
+        "TCE is for people 60 and older. Both are IRS-certified volunteers. Find a site at IRS.gov/VITA."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "Due dates",
+        "The 2025 return is due April 15, 2026. An extension to October 15 is free to request, but any tax you owe is still due in April.",
+        "E-file and direct deposit is the fastest refund. Refunds with EITC or the Additional Child Tax Credit are not issued before mid-February."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Check",
+        "Your AGI is $40,000. What is the free path?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "IRS Free File, started from IRS.gov, or a VITA site.",
+            "correct": true
+          },
+          {
+            "label": "Any website that says free in the ad.",
+            "correct": false
+          },
+          {
+            "label": "You must pay. Free File is only for people with no income.",
+            "correct": false
+          }
+        ],
+        "again": "P100",
+        "next": "P900"
+      }
+    },
+    {
+      "id": "P900",
+      "text": [
+        "Done",
+        "Free File if AGI is $89,000 or less. VITA if you want a person and you qualify. TCE if you are 60 or older.",
+        "An extension moves the paperwork, not the payment."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P400"
+        }
+      ]
+    }
+  ],
+  "notes": "Example course. Tax year 2025 figures, filed in 2026. Confirm on IRS.gov. Not tax advice."
+}

@@ -1,0 +1,118 @@
+{
+  "id": "they_change",
+  "title": "The numbers change",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "format": "json",
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "The numbers change",
+        "A course that was right last year can be wrong this year.",
+        "The standard deduction, the EITC limits, and the Free File cutoff all move. Treat any printed figure as a year, not a fact."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "A year has two names",
+        "Tax year is the year you earned the money. Filing year is the year you send the return.",
+        "A 2025 return is filed in 2026. A page that says 2026 may mean the return due in 2026, or the money earned in 2026. Read which one."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P0"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "What moves",
+        "The standard deduction is indexed. So are the EITC income limits and the maximum credit.",
+        "A threshold can also change by law, not just by inflation. The 2025 standard deduction was raised by statute, not only by the usual index."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "What does not save you",
+        "A blog, a video, or last year's software can quote a dead number with confidence.",
+        "If the page does not name the tax year, do not use the number. If it names a year that is not yours, do not use the number."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Check",
+        "You see '$15,000 standard deduction for single filers' with no year. What do you do?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "Do not use it. Find the figure for your tax year on IRS.gov.",
+            "correct": true
+          },
+          {
+            "label": "Use it. The deduction never changes.",
+            "correct": false
+          },
+          {
+            "label": "Average it with last year's number.",
+            "correct": false
+          }
+        ],
+        "again": "P300",
+        "next": "P900"
+      }
+    },
+    {
+      "id": "P900",
+      "text": [
+        "Done",
+        "Every figure in this module is for tax year 2025. Next year it may be wrong.",
+        "The next two courses show where the official number lives and how to read it."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P400"
+        }
+      ]
+    }
+  ],
+  "notes": "Example course. Teaches that figures change and how to read IRS.gov. Not tax advice."
+}
