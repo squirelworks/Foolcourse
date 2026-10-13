@@ -5,7 +5,7 @@ description = "Course catalog that opens books in Foolbook"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "foolbook @ git+https://github.com/squirelworks/Foolbook.git@v1.0.1",
+    "foolbook @ git+https://github.com/squirelworks/Foolbook.git@v1.0.1r1",
 ]
 
 [project.urls]
@@ -17,3 +17,4 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["foolcourse*", "progress*"]

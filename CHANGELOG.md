@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.0r1
+
+- Package is now `foolcourse`. No more `main` collision.
+
 
 ## 1.0.0
 

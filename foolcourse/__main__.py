@@ -19,8 +19,8 @@ _root = Path(__file__).resolve().parents[1]
 if str(_root) not in sys.path:
     sys.path.insert(0, str(_root))
 
-from main.catalog import official_ids, scan
-from main.curriculum import apply, load as load_curriculum
+from foolcourse.catalog import official_ids, scan
+from foolcourse.curriculum import apply, load as load_curriculum
 from progress.progress import Progress, default_path, student_path
 
 
@@ -83,7 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     if curriculum_path is None:
         curriculum_path = _default_curriculum()
     if making:
-        from main.curriculum import Maker
+        from foolcourse.curriculum import Maker
         out = Path(rest[1]) if len(rest) > 1 else _curriculum_dir() / "curriculum.json"
         Maker(root, xml_path, out, theme=theme)
         return 0
@@ -92,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
     if curriculum_path and curriculum_path.exists():
         curriculum = load_curriculum(curriculum_path)
         apply(catalog, curriculum)
-    from main.locale import resolve
+    from foolcourse.locale import resolve
     progress = Progress(student_path(student) if student else default_path())
     if locale is None:
         locale = str(progress.data.get("locale") or "en")
@@ -105,7 +105,7 @@ def main(argv: list[str] | None = None) -> int:
         port = int(progress.data["port"])
     if listing:
         return _print(catalog, curriculum, debug=debug, student=student)
-    from main.ui import Catalog
+    from foolcourse.ui import Catalog
     Catalog(root, xml_path, curriculum_path, port, student, theme, locale, debug)
     return 0
 

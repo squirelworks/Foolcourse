@@ -26,7 +26,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from main.catalog import official_ids, scan
+from foolcourse.catalog import official_ids, scan
 
 
 def load(path: Path) -> dict:
@@ -139,7 +139,7 @@ class Maker:
         self.root.geometry("980x560")
         self.root.minsize(720, 360)
         if theme == "modern":
-            from main.ui import _row_style as _modern_style
+            from foolcourse.ui import _row_style as _modern_style
             _modern_style(self.root, "modern")
         else:
             _row_style(self.root)
