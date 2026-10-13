@@ -29,8 +29,10 @@ def main(argv: list[str] | None = None) -> int:
     if "--freshstart" in argv:
         return _freshstart()
     if "--doctor" in argv:
-        from foolcourse._debug import run
-        return run()
+        from foolcourse._debug.dump import dump
+        path = dump("doctor")
+        print(f"Wrote {path}")
+        return 0
     listing = False
     making = False
     debug = False
