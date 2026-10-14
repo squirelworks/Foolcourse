@@ -1,53 +1,80 @@
-# ToolBook
+# ToolBook research notes
 
-Foolcourse can open a ToolBook 8.1 `.tbk` because Foolbook can read one.
-That is backward compatibility. It is not the format Foolcourse authors in.
+## RTM triage (2026-10-14)
 
-## What the 8.1 books are
+TB80RTM is UI and memory management heavy. No named file open (`_lopen`, `_lread`, `OpenFile`, `ReadFile`, `CreateFile`). Named CDB functions: `CDBSAVEBOOK`, `CDBGETVALUEEX`, `CDBSENDVALUEEX`, `CDBSETVALUEEX`. These are the property bus.
 
-The course books that motivated this work are Click2learn ToolBook II
-8.1 shells. A book is a `0xC00`-byte stub, then a stream at
-`ZZZTBKBOOKLOC`: file offset `0xC00`, magic `0x22222222`. The stream
-starts `03 4A 42 4F`, version `01 00 00 08`. Pages are `80 65` records.
-OpenScript handlers are bytecode expanded by TB80CMP `FUN_1040_0970`.
+### Named functions
 
-Foolbook decodes that bytecode. It also compiles it back. The compiler
-emits keyword tokens, CRLF, space runs, and repeats. It does not yet
-emit back-reference compression.
+| Function | Role |
+|----------|------|
+| `FUN_1068_0098` | `GLOBALALLOC` with retry on OOM |
+| `FUN_1068_00d0` | OOM dialog, returns 4 to retry |
+| `FUN_1068_0000` | dialog helper, top caller of `GETDLGITEM` and `SENDMESSAGE` |
+| `FUN_10d0_3166` | window long reader, top caller of `GETWINDOWLONG` |
 
-## The shells
+### Thin wrappers
 
-Foolbook can export a `.tbk`. The Filing taxes module ships nine of
-them. A shell has:
+| API | Functions |
+|-----|-----------|
+| `BEGINPAINT` | `FUN_1070_0be0`, `FUN_1098_14fc`, `FUN_1120_06da` |
+| `ENDPAINT` | `FUN_1070_0be0`, `FUN_1120_06da` |
+| `CREATEWINDOW` | `FUN_1050_08aa`, `FUN_10a8_0062`, `FUN_10a8_1c3c` |
+| `DESTROYWINDOW` | `FUN_1050_1566`, `FUN_1050_196a` |
+| `SHOWWINDOW` | `FUN_1098_1b88`, `FUN_10d0_3166`, `FUN_1188_25ac` |
+| `ENABLEWINDOW` | `FUN_10b8_33f0`, `FUN_1188_25ac`, `FUN_1188_267a` |
+| `SETFOCUS` | `FUN_1060_0b80`, `FUN_1098_1ca0`, `FUN_10b8_33f0` |
+| `GETFOCUS` | `FUN_1060_0a48`, `FUN_1060_0b80`, `FUN_1098_0d44` |
+| `INVALIDATERECT` | `FUN_1010_0376`, `FUN_1070_063a`, `FUN_1070_07fa` |
+| `ENDDIALOG` | `FUN_1188_2450`, `FUN_1188_2b8e` |
 
-- the locator at file `0x9EC`
-- the JBO signature and version at `0xC00`
-- a book-level property tree before the pages
-- page records with `14 00 00 11` and bounds words taken from a live page
-- a compiled `buttonClick` handler
+### API counts
 
-Foolbook's reader opens these. The ToolBook 8.1 engine has not been
-asked to. That is the next check, recorded in Foolbook
-`plannedmilestones.md`.
+| API | Hits |
+|-----|------|
+| `GETDLGITEM` | 446 |
+| `SENDMESSAGE` | 321 |
+| `LSTRLEN` | 282 |
+| `GLOBALUNLOCK` | 275 |
+| `GETWINDOWLONG` | 275 |
+| `GLOBALLOCK` | 210 |
+| `GLOBALFREE` | 205 |
 
-What a live open still has to settle:
+### GETDLGITEM control IDs
 
-- whether the property tree is walked by length or by a count not yet found
-- whether a minimal book needs the resource directory a real book has
-- whether `go to page "P100"` is accepted, or the operand must be tokenized
-- what `CDBSENDCREATE` and `FUN_12c8_0850` reject before they write bounds
+| ID | Count |
+|----|-------|
+| 0x65 (101) | 55 |
+| 0x67 (103) | 12 |
+| 0xDB8 (3512) | 12 |
+| 0x11E3 (4579) | 10 |
 
-The test is Win98, TB80RTM, break at the JBO check, open a Filing taxes
-shell. The failure should be a specific check, not "not a book."
+ID 101 is the most common. In the first sample, it follows a `SETWINDOWTEXT` on a path string.
 
-## Why this is here
+### GETWINDOWLONG indices
 
-So the lineage is written down, and so nobody mistakes a shell for a
-finished book. Foolcourse does not need the 8.1 engine. A deployment
-that has old `.tbk` files can open them. New courses are `.fbk`.
+| Index | Count | Meaning |
+|-------|-------|---------|
+| 10 | 196 | custom offset |
+| 8 | 35 | custom offset |
+| 0xFFF0 (-16) | 30 | `GWL_WNDPROC` or similar |
+| 0xFFFC (-4) | 2 | `GWL_WNDPROC` |
+| 0 | 1 | `GWL_USERDATA` |
 
-## Research notes (2026-10-14)
+## Object struct
 
-- RTM triage: UI/memory heavy, no named file open. See `tbworkingpapers/tbwp0018/rtm-triage.md`.
-- RTM nameable: thin wrappers for BEGINPAINT, ENDPAINT, CREATEWINDOW, DESTROYWINDOW, SHOWWINDOW, ENABLEWINDOW, SETFOCUS, GETFOCUS, INVALIDATERECT, ENDDIALOG. See `tbworkingpapers/tbwp0018/rtm-nameable.md`.
-- Object struct: 0x76 bytes, bounds at +0x0f, GDI handle at +0x3b, BitBlt flag at +0x1f. See `Foolbook/documentation/research-notes.md`.
+0x76 bytes. Bounds at `+0x0f`. GDI handle at `+0x3b`. BitBlt flag at `+0x1f`. Point count at `+0x30`, point array at `+0x32`.
+
+`FUN_1478_00a0` is the near-object pool. `FUN_1478_014a` is the array allocator.
+
+## Palette
+
+8bpp BMPs need the book's palette from BAS segment 1150.
+
+## Field text
+
+`DRAWTEXT` reads from `param_5 + 0x50` / `+0x4a` / `+0x4c`.
+
+## Not the record reader
+
+None of these are the 14 00 00 record reader. They are the paint and load paths.
