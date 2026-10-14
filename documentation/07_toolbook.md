@@ -45,3 +45,9 @@ shell. The failure should be a specific check, not "not a book."
 So the lineage is written down, and so nobody mistakes a shell for a
 finished book. Foolcourse does not need the 8.1 engine. A deployment
 that has old `.tbk` files can open them. New courses are `.fbk`.
+
+## Research notes (2026-10-14)
+
+- RTM triage: UI/memory heavy, no named file open. See `tbworkingpapers/tbwp0018/rtm-triage.md`.
+- RTM nameable: thin wrappers for BEGINPAINT, ENDPAINT, CREATEWINDOW, DESTROYWINDOW, SHOWWINDOW, ENABLEWINDOW, SETFOCUS, GETFOCUS, INVALIDATERECT, ENDDIALOG. See `tbworkingpapers/tbwp0018/rtm-nameable.md`.
+- Object struct: 0x76 bytes, bounds at +0x0f, GDI handle at +0x3b, BitBlt flag at +0x1f. See `Foolbook/documentation/research-notes.md`.
