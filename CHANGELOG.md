@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.0r3
+
+- Depends on Foolbook 1.0.2.
+
+
 ## 1.0.0r1
 
 - Package is now `foolcourse`. No more `main` collision.
