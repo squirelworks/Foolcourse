@@ -45,6 +45,8 @@ _CATALOGS = {
         "not_found": "Course file not found:\n{path}",
         "no_foolbook": "Foolbook was not found.\nPut Foolbook next to Foolcourse, or set FOOLBOOK.",
         "all": "All",
+        "ask_courses": "Choose the folder that holds the courses.\n\nThe curriculum is already part of this program.",
+        "ask_courses_title": "Where are the courses?",
     },
     "klingon": {
         "app": "Foolcourse",
@@ -73,6 +75,8 @@ _CATALOGS = {
         "not_found": "paq tu'be'lu':\n{path}",
         "no_foolbook": "Foolbook tu'be'lu'.\nFoolbook yIlan, pagh FOOLBOOK yIcher.",
         "all": "Hoch",
+        "ask_courses": "paqmey Datu'bogh yIwIv.\n\nghojmeH paq tu'lu'pu'.",
+        "ask_courses_title": "paqmey nuqDaq?",
     },
 }
 

@@ -1,6 +1,6 @@
 # Foolcourse
 
-Version 1.0.0r5. Depends on Foolbook 1.0.5r32.
+Version 1.0.0r6. Depends on Foolbook 1.0.5r32.
 
 From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
 
@@ -20,6 +20,14 @@ python3 -m pip install -U pip
 python3 -m pip install -e .
 python3 -m foolcourse
 ```
+
+## Windows
+
+Unzip `Foolcourse-windows.zip` and double-click `Foolcourse.bat`. Python is inside the folder. You do not install it.
+
+The NIDA curriculum is already in that folder. The first time it starts, it asks where the courses are. It remembers the folder. Put a new course in that folder and click Refresh.
+
+## What it is
 
 A course platform. It catalogs a courses folder and opens the selected
 course in Foolbook.

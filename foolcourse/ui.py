@@ -22,6 +22,7 @@ from foolcourse.progress.progress import Progress, default_path, student_path
 from foolcourse.catalog import official_ids, scan
 from foolcourse.locale import t
 from foolcourse.curriculum import apply, load as load_curriculum
+from foolcourse.home import remember_courses
 
 
 
@@ -58,6 +59,22 @@ def _find_foolbook() -> Path | None:
             return c
     return None
 
+
+def _foolbook_cmd(book: str, course: str, student: str) -> list[str] | None:
+    """Start Foolbook with this same interpreter.
+
+    A portable Windows copy has Foolbook on PYTHONPATH, so -m foolbook
+    works. A source checkout falls back to the file beside this program.
+    """
+    tail = [book, "--course", course, "--student", student]
+    try:
+        import foolbook  # noqa: F401
+        return [sys.executable, "-m", "foolbook", *tail]
+    except ImportError:
+        found = _find_foolbook()
+        if found is None:
+            return None
+        return [sys.executable, str(found), *tail]
 
 
 def _row_style(root):
@@ -212,6 +229,7 @@ class Catalog:
         p = filedialog.askdirectory(title=t(self.locale, "courses_folder"))
         if p:
             self.courses_root = Path(p)
+            remember_courses(self.courses_root)
             self.subject_i = None
             self.module_i = None
             self._reload()
@@ -499,12 +517,10 @@ class Catalog:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "not_found", path=path or "(no path)"))
             return
         cid = row.get("id") or ""
-        # Launch native Foolbook with the book path. No server.
-        foolbook = _find_foolbook()
-        if foolbook is None:
+        cmd = _foolbook_cmd(path, cid, str(self.progress.path))
+        if cmd is None:
             messagebox.showwarning(t(self.locale, "app"), t(self.locale, "no_foolbook"))
             return
-        cmd = [sys.executable, str(foolbook), path, "--course", cid]
         if self._viewer and self._viewer.poll() is None:
             self._viewer.terminate()
             try:

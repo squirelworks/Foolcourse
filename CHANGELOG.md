@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.0r6
+
+- A Windows folder you unzip and double-click. It loads the NIDA curriculum that sits beside it, then asks where the courses are, and remembers that folder.
+- Depends on Foolbook 1.0.5r32.
+
 ## 1.0.0r5
 
 - Depends on Foolbook 1.0.5r32, not 1.0.2.

@@ -26,11 +26,9 @@ from foolcourse.progress.fcs import pack, unpack
 
 
 def student_dir() -> Path:
-    """Folder that holds student files."""
-    root = Path(__file__).resolve().parents[1]
-    dest = root / "_student"
-    dest.mkdir(parents=True, exist_ok=True)
-    return dest
+    """Folder that holds student files. Beside the program, not inside a course."""
+    from foolcourse.home import student_dir as home_student_dir
+    return home_student_dir()
 
 
 def student_path(name: str = "student") -> Path:

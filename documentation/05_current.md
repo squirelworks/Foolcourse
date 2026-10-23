@@ -1,6 +1,6 @@
 # Current state
 
-Foolcourse 1.0.0r5. Foolversity v0.9.0. Foolbook v1.0.5r32.
+Foolcourse 1.0.0r6. Foolversity v0.9.0. Foolbook v1.0.5r32.
 
 ## Foolcourse does
 

@@ -21,6 +21,7 @@ if str(_root) not in sys.path:
 
 from foolcourse.catalog import official_ids, scan
 from foolcourse.curriculum import apply, load as load_curriculum
+from foolcourse.home import default_curriculum, programs_xml_for, resolve_courses
 from foolcourse.progress.progress import Progress, default_path, student_path
 
 
@@ -86,9 +87,12 @@ def main(argv: list[str] | None = None) -> int:
             rest.append(a)
         i += 1
 
-    root = Path(rest[0]) if rest else _default_root()
+    given = Path(rest[0]) if rest else None
     if curriculum_path is None:
-        curriculum_path = _default_curriculum()
+        curriculum_path = default_curriculum()
+    if xml_path is None:
+        xml_path = programs_xml_for(curriculum_path)
+    root = resolve_courses(given, ask=not listing and not making)
     if making:
         from foolcourse.curriculum import Maker
         out = Path(rest[1]) if len(rest) > 1 else _curriculum_dir() / "curriculum.json"
@@ -122,7 +126,7 @@ def _freshstart() -> int:
     import subprocess
     cmd = [
         sys.executable, "-m", "pip", "install", "--force-reinstall",
-        "git+https://github.com/squirelworks/Foolcourse.git@v1.0.0r5",
+        "git+https://github.com/squirelworks/Foolcourse.git@v1.0.0r6",
     ]
     return subprocess.call(cmd)
 
