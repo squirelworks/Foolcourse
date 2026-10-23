@@ -2,6 +2,25 @@
 
 Version 1.0.0. Depends on Foolbook 1.0.1.
 
+From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
+
+```bash
+mkdir -p ~/FU
+cd ~/FU
+if [ ! -d Foolcourse/.git ]; then
+  git clone https://github.com/squirelworks/Foolcourse.git
+fi
+cd Foolcourse
+git fetch origin
+git checkout -B main origin/main
+git pull --ff-only origin main
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -U pip
+python3 -m pip install -e .
+python3 -m foolcourse
+```
+
 A course platform. It catalogs a courses folder and opens the selected
 course in Foolbook.
 
