@@ -1,6 +1,6 @@
 [project]
 name = "foolcourse"
-version = "1.0.0r3"
+version = "1.0.0r4"
 description = "Course catalog that opens books in Foolbook"
 readme = "README.md"
 requires-python = ">=3.10"

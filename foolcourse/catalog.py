@@ -151,24 +151,7 @@ def _from_xml(root: Path, xml_path: Path) -> dict:
             or _norm(title) in OFFICIAL_TITLES
             or is_official_folder(title)
         )
-        modules = []
-        for mod in menu.findall("Menu"):
-            mod_title = mod.get("title") or "Module"
-            courses = []
-            for item in mod.iter("Item"):
-                lid = item.get("lessonid") or ""
-                if not lid:
-                    continue
-                path = files.get(lid.lower()) or files.get(lid)
-                courses.append({
-                    "id": lid,
-                    "title": item.get("title") or lid,
-                    "path": path or "",
-                    "official": official_track,
-                })
-                seen.add(lid.lower())
-            if courses:
-                modules.append({"name": mod_title, "courses": courses})
+        modules = _modules(menu, files, official_track, seen)
         if modules:
             subjects.append({
                 "name": title,
@@ -198,6 +181,45 @@ def _from_xml(root: Path, xml_path: Path) -> dict:
         "xml": str(xml_path),
         "subjects": subjects,
     }
+
+
+def _modules(menu, files: dict, official: bool, seen: set[str]) -> list[dict]:
+    """Modules under one program.
+
+    The NIDA list is three menus deep: program, group, unit. A unit that
+    holds lessons becomes its own module, named "group / unit", so the
+    third level is not folded into the group and lost.
+    """
+    modules = []
+
+    def add(name: str, node) -> None:
+        courses = []
+        for item in node.findall("Item"):
+            lid = item.get("lessonid") or ""
+            if not lid:
+                continue
+            path = files.get(lid.lower()) or files.get(lid)
+            courses.append({
+                "id": lid,
+                "title": item.get("title") or lid,
+                "path": path or "",
+                "official": official,
+            })
+            seen.add(lid.lower())
+        if courses:
+            modules.append({"name": name, "courses": courses})
+
+    def walk(node, prefix: str) -> None:
+        title = node.get("title") or "Module"
+        name = f"{prefix} / {title}" if prefix else title
+        add(name, node)
+        for child in node.findall("Menu"):
+            walk(child, name)
+
+    for child in menu.findall("Menu"):
+        walk(child, "")
+    add(menu.get("title") or "Courses", menu)
+    return modules
 
 
 def _index_books(root: Path) -> dict[str, str]:

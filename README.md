@@ -22,6 +22,7 @@ python3 foolcourse.py --make path/to/courses  # curriculum maker
 python3 foolcourse.py --student alex        # _student/alex.fcs
 python3 foolcourse.py --port 8080             # viewer port, default 1337
 python3 foolcourse.py path/to/courses --curriculum att.curriculum.json
+python3 foolcourse.py path/to/courses --xml _curriculum/nida.programs.xml --curriculum _curriculum/nida.curriculum.json
 ```
 
 ## Default folders

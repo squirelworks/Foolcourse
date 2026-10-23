@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.0r4
+
+- NIDA program list: `_curriculum/nida.curriculum.json` and `_curriculum/nida.programs.xml`.
+- A three-level menu keeps the unit. "DC Circuits / Introduction to Electricity" is not folded into "DC Circuits".
+
 ## 1.0.0r3
 
 - Depends on Foolbook 1.0.2.
