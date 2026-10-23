@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.0r5
+
+- Depends on Foolbook 1.0.5r32, not 1.0.2.
+
 ## 1.0.0r4
 
 - NIDA program list: `_curriculum/nida.curriculum.json` and `_curriculum/nida.programs.xml`.

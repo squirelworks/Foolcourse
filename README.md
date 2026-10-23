@@ -1,6 +1,6 @@
 # Foolcourse
 
-Version 1.0.0. Depends on Foolbook 1.0.1.
+Version 1.0.0r5. Depends on Foolbook 1.0.5r32.
 
 From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
 

@@ -1,7 +1,6 @@
 # Current state
 
-Foolcourse 1.0.0r2. Foolversity v0.9.0. Foolbook v1.0.0r1, with later
-commits that Foolcourse now launches directly.
+Foolcourse 1.0.0r5. Foolversity v0.9.0. Foolbook v1.0.5r32.
 
 ## Foolcourse does
 

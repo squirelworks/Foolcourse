@@ -16,7 +16,7 @@ Foolbook             opens the book and runs it
 | --- | --- | --- |
 | Foolversity | v0.9.0 | Make a student, a school, a curriculum |
 | Foolcourse | v0.9.0 | Catalog a folder, open a course, keep scores |
-| Foolbook | v1.0.0r1 | Open a book, follow handlers, record progress |
+| Foolbook | v1.0.5r32 | Open a book, follow handlers, record progress |
 
 ## The boundary
 
