@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.1r1
+
+- Windows folder only. Unzip it and double-click `Foolcourse.bat`. Put the books in `courses`.
+- Depends on Foolbook 1.0.8r1 (053bf98), the reader after the quiz and group fixes. Linux and macOS stay at 1.0.1.
+
 ## 1.0.1
 
 - A GitHub release with a Windows, Linux, and macOS folder. Unzip it and start Foolcourse. Put the books in `courses`. Python is inside the folder.

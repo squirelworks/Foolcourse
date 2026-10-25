@@ -1,6 +1,6 @@
 # Foolcourse
 
-Version 1.0.1. Depends on Foolbook 1.0.8.
+Version 1.0.1r1. The Windows folder uses Foolbook 1.0.8r1 (053bf98). The 1.0.1 Linux and macOS folders are unchanged.
 
 From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
 
@@ -23,7 +23,7 @@ python3 -m foolcourse
 
 ## A copy for someone else
 
-The downloads are on the [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1). Python is inside the folder. Nobody installs it.
+The downloads are on the [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1). The newer Windows folder is [1.0.1r1](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1r1): `Foolcourse-1.0.1r1-windows-x64.zip`. Python is inside the folder. Nobody installs it.
 
 | file | how it starts |
 | --- | --- |
