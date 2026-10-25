@@ -2,8 +2,13 @@
 
     python3 pack/windows.py
 
-The folder is dist/Foolcourse-windows/. Double-click Foolcourse.bat.
-The NIDA curriculum is inside it. The first start asks where the courses are.
+The folder is dist/Foolcourse-windows/. Put books in its courses folder,
+then zip it again:
+
+    python3 pack/windows.py --zip
+
+Double-click Foolcourse.bat. If courses already has books, it does not ask
+where they are.
 """
 
 from __future__ import annotations
@@ -19,14 +24,25 @@ ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "pack" / "cache"
 DIST = ROOT / "dist" / "Foolcourse-windows"
 ZIP = ROOT / "dist" / "Foolcourse-windows.zip"
-FOOLBOOK = Path("/tmp/Foolbook")
-OPENSCRIPT = Path("/tmp/repos/openscript_analysis")
 CPYTHON = (
     "https://github.com/astral-sh/python-build-standalone/releases/download/"
     "20261021/cpython-3.12.15+20261021-x86_64-pc-windows-msvc-install_only.tar.gz"
 )
 
 SKIP = {".git", "__pycache__", ".venv", "dist", "documentation", "pack", "openscript_analysis"}
+
+
+def _checkout(name: str) -> Path:
+    found = [
+        ROOT.parent / name,
+        Path("/tmp/scope") / name,
+        Path("/tmp") / name,
+        Path("/tmp/repos") / name,
+    ]
+    for path in found:
+        if path.is_dir() and (path / "pyproject.toml").is_file():
+            return path
+    raise SystemExit(f"{name} checkout not found")
 
 
 def download(url: str, dest: Path) -> Path:
@@ -65,9 +81,22 @@ def write_text(path: Path, text: str) -> None:
     path.write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
 
 
+def zip_dist() -> int:
+    if not DIST.is_dir():
+        raise SystemExit(f"no folder to zip: {DIST}")
+    if ZIP.exists():
+        ZIP.unlink()
+    print("zipping", flush=True)
+    shutil.make_archive(str(ZIP.with_suffix("")), "zip", DIST.parent, DIST.name)
+    print(f"wrote {ZIP} ({ZIP.stat().st_size} bytes)", flush=True)
+    return 0
+
+
 def main() -> int:
-    if not FOOLBOOK.is_dir() or not OPENSCRIPT.is_dir():
-        raise SystemExit("Foolbook and openscript_analysis checkouts are required")
+    if "--zip" in sys.argv:
+        return zip_dist()
+    foolbook = _checkout("Foolbook")
+    openscript = _checkout("openscript_analysis")
     archive = download(CPYTHON, CACHE / "cpython-win.tar.gz")
     wheels = CACHE / "wheels"
     if not any(wheels.glob("*.whl")):
@@ -107,10 +136,13 @@ def main() -> int:
         unpack_wheel(wheel, app)
     copy_tree(ROOT / "foolcourse", app / "foolcourse")
     for name in ("foolbook", "engine", "viewer", "progress", "menu", "modules"):
-        found = FOOLBOOK / name
+        found = foolbook / name
         if found.is_dir():
             copy_tree(found, app / name)
-    copy_tree(OPENSCRIPT, app / "openscript_analysis")
+    core = foolbook / "core"
+    if core.is_dir():
+        copy_tree(core, app / "core")
+    copy_tree(openscript, app / "openscript_analysis")
     curriculum = DIST / "_curriculum"
     curriculum.mkdir()
     for name in ("nida.curriculum.json", "nida.programs.xml"):
@@ -129,22 +161,28 @@ set "PYTHONPATH=%~dp0app"
 "%~dp0python\\python.exe" -m foolcourse
 if errorlevel 1 pause
 """)
-    write_text(DIST / "START.txt", """Foolcourse for Windows
+    courses = DIST / "courses"
+    courses.mkdir()
+    write_text(courses / "PUT COURSES HERE.txt", """Put the course files in this folder.
+
+A .tbk or .fbk can sit here, or in a folder inside this one.
+If a course opens another book, such as nida81, put that file in here too.
+
+Then double-click Foolcourse.bat in the folder above this one.
+""")
+    write_text(DIST / "START.txt", """Foolcourse
 
 1. Unzip this whole folder. Do not run it from inside the zip.
-2. Double-click Foolcourse.bat.
-3. When it asks where the courses are, pick the folder that holds the .tbk files.
-4. It remembers that folder. The curriculum is already in _curriculum and is not something you pick.
+2. The courses go in the courses folder. If they are already there, leave them.
+3. Double-click Foolcourse.bat.
+4. Click a course to open it.
 
-Foolcourse-console.bat does the same thing with a window that stays open if it fails.
+It remembers the courses folder. To add a course later, put the file in courses and click Refresh.
+
+If the window does not open, double-click Foolcourse-console.bat and leave that window up.
 """)
 
-    if ZIP.exists():
-        ZIP.unlink()
-    print("zipping", flush=True)
-    shutil.make_archive(str(ZIP.with_suffix("")), "zip", DIST.parent, DIST.name)
-    print(f"wrote {ZIP} ({ZIP.stat().st_size} bytes)", flush=True)
-    return 0
+    return zip_dist()
 
 
 if __name__ == "__main__":

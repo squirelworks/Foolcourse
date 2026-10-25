@@ -29,8 +29,10 @@ Grows into the administration side only as far as the files need.
 
 ## Foolbook
 
-- Graphics: polygons, bounds, and pictures drawn in the viewer.
-- Quizzes read from a raw `.tbk`, not only from a Foolbook JSON.
+Done in 1.0.8: polygons, bounds, and pictures drawn for the page on screen. Quizzes read from a raw `.tbk`.
+
+Still open:
+
 - System books used as a runtime shell, not only as a jump target.
 - A `.tbk` the ToolBook 8.1 engine will open. See
   [07_toolbook.md](07_toolbook.md).

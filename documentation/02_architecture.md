@@ -15,8 +15,8 @@ Foolbook             opens the book and runs it
 | program | release | job |
 | --- | --- | --- |
 | Foolversity | v0.9.0 | Make a student, a school, a curriculum |
-| Foolcourse | v0.9.0 | Catalog a folder, open a course, keep scores |
-| Foolbook | v1.0.5r32 | Open a book, follow handlers, record progress |
+| Foolcourse | v1.0.0r7 | Catalog a folder, open a course, keep scores |
+| Foolbook | v1.0.8 | Open a book, follow handlers, record progress |
 
 ## The boundary
 
@@ -35,7 +35,7 @@ change to the standard, agreed in writing, not a shared import.
 
 ## How a course opens
 
-1. Foolcourse scans `_courses/` (or the folder it was given).
+1. Foolcourse scans `_courses/` in a source checkout, or `courses/` in the Windows folder, or the folder it was given.
 2. A curriculum file marks which course ids are official.
 3. The window lists subjects, modules, and courses. Official and extra
    are both shown. The overall counts only the official list.

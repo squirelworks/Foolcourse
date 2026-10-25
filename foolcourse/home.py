@@ -1,7 +1,7 @@
 """Where a Foolcourse install keeps its own files.
 
-The curriculum ships with the program. The courses do not. A portable
-copy, the kind you unzip on Windows, remembers the folder you point it at.
+The curriculum ships with the program. On Windows the books go in
+``courses`` next to it. If that folder already has books, it is used.
 """
 
 from __future__ import annotations
@@ -59,6 +59,35 @@ def remember_courses(folder: Path) -> None:
     _courses_file().write_text(str(Path(folder).resolve()) + "\n", encoding="utf-8")
 
 
+def bundled_courses() -> Path:
+    """The folder you drop books into, next to the program."""
+    return app_dir() / "courses"
+
+
+def holds_books(folder: Path) -> bool:
+    """True when a folder, or a folder inside it, has a book."""
+    if not folder.is_dir():
+        return False
+    suffixes = {".tbk", ".sbk", ".fbk", ".fsk", ".json"}
+    try:
+        children = list(folder.iterdir())
+    except OSError:
+        return False
+    for child in children:
+        if child.is_file() and child.suffix.lower() in suffixes:
+            return True
+        if not child.is_dir() or child.name.startswith("."):
+            continue
+        try:
+            nested = child.rglob("*")
+        except OSError:
+            continue
+        for item in nested:
+            if item.is_file() and item.suffix.lower() in suffixes:
+                return True
+    return False
+
+
 def dev_courses_root() -> Path:
     """Courses bundled with a source checkout. Not used by the portable app."""
     here = app_dir()
@@ -98,8 +127,9 @@ def ask_courses(locale: str = "en") -> Path | None:
 def resolve_courses(given: Path | None, *, ask: bool) -> Path:
     """A path on the command line wins. Otherwise use the remembered folder.
 
-    The portable app asks the first time. A source checkout uses its own
-    _courses folder and does not ask.
+    A portable copy uses ``courses`` beside the program when that folder
+    already has books, and does not ask. An empty one asks once. A source
+    checkout uses its own ``_courses`` folder and does not ask.
     """
     if given is not None:
         folder = given.expanduser()
@@ -109,13 +139,18 @@ def resolve_courses(given: Path | None, *, ask: bool) -> Path:
     saved = remembered_courses()
     if saved is not None:
         return saved
+    dropped = bundled_courses()
+    if holds_books(dropped):
+        remember_courses(dropped)
+        return dropped
     if portable() and ask:
         chosen = ask_courses()
         if chosen is not None:
             remember_courses(chosen)
             return chosen
     if portable():
-        return app_dir() / "_courses"
+        dropped.mkdir(parents=True, exist_ok=True)
+        return dropped
     return dev_courses_root()
 
 

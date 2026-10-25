@@ -9,7 +9,7 @@ how the three programs meet, and where it is going.
 | [02_architecture.md](02_architecture.md) | Foolversity, Foolcourse, Foolbook, and the files they share |
 | [03_formats.md](03_formats.md) | `.fcs`, curriculum, school, `.fbk`, `.tbk` |
 | [04_deployment.md](04_deployment.md) | Official list, extras, scores, a second deployment |
-| [05_current.md](05_current.md) | What v0.9.0 actually does |
+| [05_current.md](05_current.md) | What 1.0.0r7 actually does |
 | [06_future.md](06_future.md) | The open work and the planned releases |
 | [07_toolbook.md](07_toolbook.md) | The ToolBook lineage, and the limit of it |
 

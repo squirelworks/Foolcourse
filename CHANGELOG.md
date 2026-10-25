@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.0r7
+
+- The Windows folder has a `courses` directory. Put the books there, zip the folder, and the person who unzips it double-clicks `Foolcourse.bat`. If that folder already has books, it does not ask where they are.
+- Depends on Foolbook 1.0.8.
+
 ## 1.0.0r6
 
 - A Windows folder you unzip and double-click. It loads the NIDA curriculum that sits beside it, then asks where the courses are, and remembers that folder.

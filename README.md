@@ -1,6 +1,6 @@
 # Foolcourse
 
-Version 1.0.0r6. Depends on Foolbook 1.0.5r32.
+Version 1.0.0r7. Depends on Foolbook 1.0.8.
 
 From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
 
@@ -23,9 +23,19 @@ python3 -m foolcourse
 
 ## Windows
 
-Unzip `Foolcourse-windows.zip` and double-click `Foolcourse.bat`. Python is inside the folder. You do not install it.
+This is the copy you hand to someone else. Python is inside the folder. They do not install it.
 
-The NIDA curriculum is already in that folder. The first time it starts, it asks where the courses are. It remembers the folder. Put a new course in that folder and click Refresh.
+```bash
+python3 pack/windows.py
+```
+
+That writes `dist/Foolcourse-windows/`. Put the books in `dist/Foolcourse-windows/courses/`. A book can sit in that folder or in a folder inside it. If a course opens another book, such as `nida81`, put that file in `courses` too. Then:
+
+```bash
+python3 pack/windows.py --zip
+```
+
+That writes `dist/Foolcourse-windows.zip`. They unzip the whole folder and double-click `Foolcourse.bat`. If `courses` already has books, it does not ask where they are. `START.txt` in the folder is the note they read.
 
 ## What it is
 
@@ -54,7 +64,9 @@ python3 foolcourse.py path/to/courses --xml _curriculum/nida.programs.xml --curr
 
 ## Default folders
 
-`_courses/` holds the books. `_curriculum/` holds curriculum files and is the default. With no arguments, Foolcourse catalogs `_courses/` and loads `_curriculum/example.curriculum.json`.
+`_courses/` holds the books in a source checkout. `_curriculum/` holds curriculum files and is the default. With no arguments, Foolcourse catalogs `_courses/` and loads `_curriculum/example.curriculum.json`.
+
+The Windows folder is different. Books go in `courses/` next to `Foolcourse.bat`. The NIDA curriculum in `_curriculum/` is already packed. It is not a folder they pick.
 
 The example official course is `phone`: how to not walk while using your phone. `reading_maps` and `bus_times` are extra and do not exist.
 
