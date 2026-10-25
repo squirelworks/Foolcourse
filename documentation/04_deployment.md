@@ -23,13 +23,17 @@ courses on the official list.
 A course that is not on the list still has a score. It is shown. It is
 not added into the overall.
 
-## A Windows folder
+## A Windows, Linux, or Mac folder
 
-`python3 pack/windows.py` builds `dist/Foolcourse-windows/`. Python is in that folder. The NIDA curriculum is in `_curriculum/` and is not something the person picks.
+The [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1) has a zip for Windows, Linux x64, Linux ARM, and both Macs. Python is in that folder. The NIDA curriculum is in `_curriculum/` and is not something the person picks.
 
-Books go in `courses/`. They can sit in that folder or in a folder inside it. A book the course opens, such as `nida81`, goes in there too. `python3 pack/windows.py --zip` writes the zip after the books are in place.
+`python3 pack/build.py all` builds the same folders into `dist/`.
 
-Unzip the whole folder. Double-click `Foolcourse.bat`. If `courses/` already has books, the program uses it and does not ask. An empty folder asks once. Refresh picks up a book added later.
+Books go in `courses/`. They can sit in that folder or in a folder inside it. A book the course opens, such as `nida81`, goes in there too. `python3 pack/build.py --zip windows-x64` writes the zip again after the books are in place. The same `--zip` name works for the other systems.
+
+Unzip the whole folder. Windows double-clicks `Foolcourse.bat`. Linux runs `./Foolcourse.sh`. Mac double-clicks `Foolcourse.command`. If `courses/` already has books, the program uses it and does not ask. An empty folder asks once. Refresh picks up a book added later.
+
+There is no Android or iOS copy. The window is Tk.
 
 ## A second deployment
 

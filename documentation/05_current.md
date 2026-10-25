@@ -1,6 +1,6 @@
 # Current state
 
-Foolcourse 1.0.0r7. Foolversity v0.9.0. Foolbook 1.0.8.
+Foolcourse 1.0.1. Foolversity v0.9.0. Foolbook 1.0.8.
 
 ## Foolcourse does
 
@@ -20,7 +20,7 @@ Foolcourse 1.0.0r7. Foolversity v0.9.0. Foolbook 1.0.8.
 - `--freshstart` clears progress for a clean run
 - `_debug/` holds diagnostic dumps
 - Package is `foolcourse`. The old `main` name is gone
-- A Windows folder, built by `pack/windows.py`, runs without installing Python. Books dropped in `courses/` are opened without a folder prompt
+- A Windows, Linux, and macOS folder, built by `pack/build.py`, runs without installing Python. Books dropped in `courses/` are opened without a folder prompt. The same folders are attached to the GitHub release. There is no Android or iOS build
 
 ## Foolversity does
 

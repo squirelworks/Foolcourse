@@ -1,6 +1,6 @@
 # Foolcourse
 
-Version 1.0.0r7. Depends on Foolbook 1.0.8.
+Version 1.0.1. Depends on Foolbook 1.0.8.
 
 From scratch, paste this. It clones the repo if it is missing, stays on `main`, and opens the catalog.
 
@@ -21,21 +21,29 @@ python3 -m pip install -e .
 python3 -m foolcourse
 ```
 
-## Windows
+## A copy for someone else
 
-This is the copy you hand to someone else. Python is inside the folder. They do not install it.
+The downloads are on the [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1). Python is inside the folder. Nobody installs it.
+
+| file | how it starts |
+| --- | --- |
+| `Foolcourse-1.0.1-windows-x64.zip` | Unzip the whole folder. Double-click `Foolcourse.bat`. |
+| `Foolcourse-1.0.1-linux-x64.zip` | Unzip. In a terminal: `./Foolcourse.sh` |
+| `Foolcourse-1.0.1-linux-arm64.zip` | Same, for a 64-bit ARM machine. |
+| `Foolcourse-1.0.1-macos-arm64.zip` | Unzip. Double-click `Foolcourse.command`. Apple silicon. |
+| `Foolcourse-1.0.1-macos-x64.zip` | Same, for an Intel Mac. |
+
+Put the books in the `courses` folder before you zip it for someone, or they can put the books there after they unzip. A book can sit in that folder or in a folder inside it. If a course opens another book, such as `nida81`, that file goes in `courses` too. If `courses` already has books, Foolcourse does not ask where they are. `START.txt` in the folder is the note they read.
+
+There is no Android build and no iOS build. The window is Tk. A phone does not run it.
+
+To build the folders yourself:
 
 ```bash
-python3 pack/windows.py
+python3 pack/build.py all
 ```
 
-That writes `dist/Foolcourse-windows/`. Put the books in `dist/Foolcourse-windows/courses/`. A book can sit in that folder or in a folder inside it. If a course opens another book, such as `nida81`, put that file in `courses` too. Then:
-
-```bash
-python3 pack/windows.py --zip
-```
-
-That writes `dist/Foolcourse-windows.zip`. They unzip the whole folder and double-click `Foolcourse.bat`. If `courses` already has books, it does not ask where they are. `START.txt` in the folder is the note they read.
+One system is `python3 pack/build.py windows-x64`. After you drop books into `dist/Foolcourse-1.0.1-windows-x64/courses`, zip again with `python3 pack/build.py --zip windows-x64`.
 
 ## What it is
 
