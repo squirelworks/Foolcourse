@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.1r2
+
+- Windows folder only. Unzip it and double-click `Foolcourse.bat`. Put the books in `courses`.
+- Depends on Foolbook at 1339017. Hidden groups and objects start hidden, a script can show a named button or field, and a Review link hides once that objective is 100. Linux and macOS stay at 1.0.1.
+
 ## 1.0.1r1
 
 - Windows folder only. Unzip it and double-click `Foolcourse.bat`. Put the books in `courses`.
