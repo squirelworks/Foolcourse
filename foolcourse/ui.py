@@ -110,8 +110,8 @@ class Catalog:
 
         self.root = tk.Tk()
         self.root.title(t(self.locale, "app"))
-        self.root.geometry("1040x560")
-        self.root.minsize(720, 360)
+        self.root.geometry("1280x640")
+        self.root.minsize(900, 420)
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         _row_style(self.root)
         self._build()
@@ -135,13 +135,13 @@ class Catalog:
         self.overall = ttk.Label(info, text="")
         self.overall.pack(side="right")
 
-        self.cols = ttk.Frame(self.root)
-        self.cols.pack(fill="both", expand=True, padx=4, pady=(0, 4))
-        self.cols.rowconfigure(0, weight=1)
+        self.panes = ttk.Panedwindow(self.root, orient="horizontal")
+        self.panes.pack(fill="both", expand=True, padx=4, pady=(0, 4))
+        self._shown = None
 
-        self.sub_tree = self._list(self.cols, 0, t(self.locale, "subject"))
-        self.mod_tree = self._list(self.cols, 1, t(self.locale, "module"))
-        self.course_tree, self.course_frame = self._course_list(self.cols, 2)
+        self.sub_tree, self.sub_frame = self._list(self.panes, t(self.locale, "subject"))
+        self.mod_tree, self.mod_frame = self._list(self.panes, t(self.locale, "module"))
+        self.course_tree, self.course_frame = self._course_list(self.panes)
         self.sub_tree.bind("<<TreeviewSelect>>", lambda _e: self._on_subject())
         self.mod_tree.bind("<<TreeviewSelect>>", lambda _e: self._on_module())
         self.course_tree.bind("<Double-1>", lambda _e: self._launch())
@@ -152,24 +152,22 @@ class Catalog:
         self.status = ttk.Label(bot, text=t(self.locale, "select_subject"))
         self.status.pack(side="left", padx=12)
 
-    def _list(self, parent, column: int, heading: str):
+    def _list(self, parent, heading: str):
         frame = ttk.Frame(parent)
-        frame.grid(row=0, column=column, sticky="nsew")
         frame.rowconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
         tree = ttk.Treeview(frame, columns=("name",), show="headings", selectmode="browse")
         tree.heading("name", text=heading)
-        tree.column("name", width=160, minwidth=80, stretch=True)
+        tree.column("name", width=320, minwidth=140, stretch=True)
         scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         tree.grid(row=0, column=0, sticky="nsew")
         scroll.grid(row=0, column=1, sticky="ns")
-        frame.grid_remove()
-        return tree
+        tree.bind("<Configure>", lambda event, tree=tree: self._fit_name(tree, event))
+        return tree, frame
 
-    def _course_list(self, parent, column: int):
+    def _course_list(self, parent):
         frame = ttk.Frame(parent)
-        frame.grid(row=0, column=column, sticky="nsew")
         frame.rowconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
         cols = ["course", "progress", "score"]
@@ -183,47 +181,60 @@ class Catalog:
             "id": t(self.locale, "id"),
             "track": t(self.locale, "track"),
         }
-        mins = {"course": 160, "progress": 72, "score": 72, "id": 80, "track": 72}
+        widths = {"course": 420, "progress": 88, "score": 96, "id": 96, "track": 80}
+        mins = {"course": 180, "progress": 72, "score": 72, "id": 80, "track": 72}
         for key in cols:
             tree.heading(key, text=labels[key])
-            tree.column(key, width=mins[key], minwidth=mins[key], stretch=key == "course")
+            tree.column(key, width=widths[key], minwidth=mins[key], stretch=key == "course")
         yscroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=yscroll.set)
         tree.grid(row=0, column=0, sticky="nsew")
         yscroll.grid(row=0, column=1, sticky="ns")
-        frame.grid_remove()
         return tree, frame
 
-    def _layout(self):
-        """One column until a subject is chosen, then two, then three.
+    def _fit_name(self, tree, event):
+        """The one column fills the pane, so dragging the divider shows more of the name."""
+        if event.widget is not tree or event.width < 40:
+            return
+        target = max(140, event.width - 22)
+        if abs(int(tree.column("name", "width")) - target) < 4:
+            return
+        tree.column("name", width=target)
 
-        Once a later column is open, the earlier columns stay narrow so
-        the names truncate and the current list gets the width.
-        """
+    def _layout(self):
+        """Show the next list when one is chosen. Dividers stay draggable."""
         show_mod = self.subject_i is not None
         show_course = show_mod and self.module_i is not None
-        sub_frame = self.sub_tree.master
-        mod_frame = self.mod_tree.master
-        sub_frame.grid()
+        shown = (show_mod, show_course)
+        if shown == self._shown:
+            return
+        for pane in list(self.panes.panes()):
+            self.panes.forget(pane)
+        self.panes.add(self.sub_frame, weight=1)
         if show_mod:
-            mod_frame.grid()
-        else:
-            mod_frame.grid_remove()
+            self.panes.add(self.mod_frame, weight=2)
         if show_course:
-            self.course_frame.grid()
-        else:
-            self.course_frame.grid_remove()
-        for i in range(3):
-            self.cols.columnconfigure(i, weight=0, minsize=0)
-        if not show_mod:
-            self.cols.columnconfigure(0, weight=1, minsize=200)
-        elif not show_course:
-            self.cols.columnconfigure(0, weight=0, minsize=140)
-            self.cols.columnconfigure(1, weight=1, minsize=200)
-        else:
-            self.cols.columnconfigure(0, weight=0, minsize=120)
-            self.cols.columnconfigure(1, weight=0, minsize=140)
-            self.cols.columnconfigure(2, weight=1, minsize=240)
+            self.panes.add(self.course_frame, weight=3)
+        self._shown = shown
+        self.root.after_idle(self._place_sashes)
+
+    def _place_sashes(self):
+        try:
+            self.panes.update_idletasks()
+            width = self.panes.winfo_width()
+        except tk.TclError:
+            return
+        if width < 200:
+            return
+        n = len(self.panes.panes())
+        try:
+            if n == 2:
+                self.panes.sashpos(0, max(280, int(width * 0.42)))
+            elif n >= 3:
+                self.panes.sashpos(1, max(640, int(width * 0.62)))
+                self.panes.sashpos(0, max(280, int(width * 0.30)))
+        except tk.TclError:
+            return
 
     def _pick_root(self):
         p = filedialog.askdirectory(title=t(self.locale, "courses_folder"))
@@ -313,9 +324,8 @@ class Catalog:
         tree = self.sub_tree
         for i in tree.get_children():
             tree.delete(i)
-        narrow = self.subject_i is not None
         for i, sub in enumerate(self.catalog.get("subjects") or []):
-            tree.insert("", "end", iid=str(i), values=(_clip(sub.get("name") or "", narrow),))
+            tree.insert("", "end", iid=str(i), values=(sub.get("name") or "",))
         if self.subject_i is not None:
             tree.selection_set(str(self.subject_i))
             tree.see(str(self.subject_i))
@@ -327,9 +337,8 @@ class Catalog:
         if self.subject_i is None:
             return
         modules = (self.catalog["subjects"][self.subject_i].get("modules") or [])
-        narrow = self.module_i is not None
         for i, mod in enumerate(modules):
-            tree.insert("", "end", iid=str(i), values=(_clip(mod.get("name") or "", narrow),))
+            tree.insert("", "end", iid=str(i), values=(mod.get("name") or "",))
         if self.module_i is not None and str(self.module_i) in tree.get_children():
             tree.selection_set(str(self.module_i))
             tree.see(str(self.module_i))
@@ -544,12 +553,6 @@ def _progress_label(progress: Progress, cid: str, locale: str) -> str:
         n = rec_label.split()[0]
         return t(locale, "pages", n=n)
     return rec_label
-
-
-def _clip(text: str, narrow: bool) -> str:
-    if not narrow or len(text) <= 18:
-        return text
-    return text[:17] + "…"
 
 
 def _score_text(progress: Progress, cid: str) -> str:
