@@ -157,15 +157,11 @@ def resolve_courses(given: Path | None, *, ask: bool) -> Path:
 def default_curriculum() -> Path | None:
     """The curriculum that belongs to this copy of the program.
 
-    A portable copy loads the NIDA list that was packed beside it.
-    A source checkout still prefers the small example.
+    The example is preferred. Otherwise the first curriculum file in the folder.
     """
     folder = curriculum_dir()
     if not folder.is_dir():
         return None
-    nida = folder / "nida.curriculum.json"
-    if portable() and nida.is_file():
-        return nida
     example = folder / "example.curriculum.json"
     if example.is_file():
         return example
@@ -174,10 +170,23 @@ def default_curriculum() -> Path | None:
 
 
 def programs_xml_for(curriculum: Path | None) -> Path | None:
-    """The menu that goes with the NIDA curriculum, if this copy has it."""
+    """The menu beside a curriculum, when the names match.
+
+    ``street.curriculum.json`` uses ``street.xml``. If that file is
+    missing and exactly one ``street.*.xml`` sits beside it, that is the menu.
+    """
     if curriculum is None:
         return None
-    xml = curriculum.parent / "nida.programs.xml"
-    if curriculum.name.startswith("nida.") and xml.is_file():
-        return xml
+    suffix = ".curriculum.json"
+    if not curriculum.name.endswith(suffix):
+        return None
+    stem = curriculum.name[: -len(suffix)]
+    exact = curriculum.parent / f"{stem}.xml"
+    if exact.is_file():
+        return exact
+    matches = sorted(
+        path for path in curriculum.parent.glob(f"{stem}.*.xml") if path.is_file()
+    )
+    if len(matches) == 1:
+        return matches[0]
     return None

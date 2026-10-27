@@ -2,17 +2,9 @@
 
 ## Official and extra
 
-The official list is a property of the deployment, not of ATT.
-
-It can be named three ways:
-
-- a curriculum file, which is the normal way
-- a folder whose name is `03_ATT_Master`, `ATT_Master`, or `0_MASTER3`
-- a menu in a `courses.xml`, where the `0_MASTER3` / ATT Master_3 menu
-  is the official list and rating-track-only lessons are extra
-
-The window labels the official track by the list's name. It says
-"ATT Master" only when that is the list in use.
+The official list is a curriculum file. A folder name does not decide
+it, and a menu does not decide it. The menu supplies the subjects,
+modules, and titles. The window labels the track by the list's name.
 
 ## Scores
 
@@ -25,11 +17,11 @@ not added into the overall.
 
 ## A Windows, Linux, or Mac folder
 
-The [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1) has a zip for Windows, Linux x64, Linux ARM, and both Macs. Python is in that folder. The NIDA curriculum is in `_curriculum/` and is not something the person picks.
+The [1.0.1 release](https://github.com/squirelworks/Foolcourse/releases/tag/v1.0.1) has a zip for Windows, Linux x64, Linux ARM, and both Macs. Python is in that folder. The curriculum files in `_curriculum/` are the examples, not a deployment's courses.
 
 `python3 pack/build.py all` builds the same folders into `dist/`.
 
-Books go in `courses/`. They can sit in that folder or in a folder inside it. A book the course opens, such as `nida81`, goes in there too. `python3 pack/build.py --zip windows-x64` writes the zip again after the books are in place. The same `--zip` name works for the other systems.
+Books go in `courses/`. They can sit in that folder or in a folder inside it. A book the course opens goes in there too. `python3 pack/build.py --zip windows-x64` writes the zip again after the books are in place. The same `--zip` name works for the other systems.
 
 Unzip the whole folder. Windows double-clicks `Foolcourse.bat`. Linux runs `./Foolcourse.sh`. Mac double-clicks `Foolcourse.command`. If `courses/` already has books, the program uses it and does not ask. An empty folder asks once. Refresh picks up a book added later.
 
@@ -38,8 +30,7 @@ There is no Android or iOS copy. The window is Tk.
 ## A second deployment
 
 Point Foolcourse at a different courses folder and a different
-curriculum file. No ATT names are required in the path. The same
-program, the same rules.
+curriculum file. The same program, the same rules.
 
 Foolversity makes the curriculum file and the student file for that
 deployment. `--out` writes them into the Foolcourse tree.

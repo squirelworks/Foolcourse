@@ -44,4 +44,4 @@ Foolcourse 1.0.1. Foolversity v0.9.0. Foolbook 1.0.8.
 - Locale overlay files must not be listed as courses. The catalog skips
   `*.klingon.json`. A new locale must be skipped the same way.
 - A viewer Foolcourse did not start is left alone.
-- A jump to `nida81` still needs that file beside the course. The copy in `core/` is a stub.
+- A course that opens a second book needs that file beside it.

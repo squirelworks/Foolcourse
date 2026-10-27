@@ -4,16 +4,13 @@ A curriculum is a named official course list plus extra material.
 Anything not on the official list is extra: catalogued, openable, and
 scored on its own, but not counted in the overall.
 
-ATT is one curriculum. Its official list is ATT Master. A later
-deployment makes its own file and does not need ATT names.
-
 File shape:
 
     {
-      "name": "ATT",
-      "official_name": "ATT Master",
-      "official": ["93951100", "93951101"],
-      "extras": ["sidequest"],
+      "name": "Getting around",
+      "official_name": "Street sense",
+      "official": ["phone"],
+      "extras": ["reading_maps"],
       "root": "courses/",
       "notes": ""
     }

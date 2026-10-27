@@ -200,8 +200,11 @@ def build_one(key: str) -> Path:
     copy_tree(openscript, app / "openscript_analysis")
     curriculum = folder / "_curriculum"
     curriculum.mkdir()
-    for name in ("nida.curriculum.json", "nida.programs.xml"):
-        shutil.copy2(ROOT / "_curriculum" / name, curriculum / name)
+    source = ROOT / "_curriculum"
+    for path in sorted(source.glob("*.curriculum.json")):
+        shutil.copy2(path, curriculum / path.name)
+    for path in sorted(source.glob("*.xml")):
+        shutil.copy2(path, curriculum / path.name)
 
     courses = folder / "courses"
     courses.mkdir()
@@ -209,7 +212,7 @@ def build_one(key: str) -> Path:
     write_text(courses / "PUT COURSES HERE.txt", """Put the course files in this folder.
 
 A .tbk or .fbk can sit here, or in a folder inside this one.
-If a course opens another book, such as nida81, put that file in here too.
+If a course opens another book, put that file in here too.
 """, crlf=crlf)
     _launchers(folder, spec)
     return zip_dir(folder, archive) or archive

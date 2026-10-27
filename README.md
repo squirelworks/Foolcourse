@@ -33,7 +33,7 @@ The downloads are on the [1.0.1 release](https://github.com/squirelworks/Foolcou
 | `Foolcourse-1.0.1-macos-arm64.zip` | Unzip. Double-click `Foolcourse.command`. Apple silicon. |
 | `Foolcourse-1.0.1-macos-x64.zip` | Same, for an Intel Mac. |
 
-Put the books in the `courses` folder before you zip it for someone, or they can put the books there after they unzip. A book can sit in that folder or in a folder inside it. If a course opens another book, such as `nida81`, that file goes in `courses` too. If `courses` already has books, Foolcourse does not ask where they are. `START.txt` in the folder is the note they read.
+Put the books in the `courses` folder before you zip it for someone, or they can put the books there after they unzip. A book can sit in that folder or in a folder inside it. If a course opens another book, that file goes in `courses` too. If `courses` already has books, Foolcourse does not ask where they are. `START.txt` in the folder is the note they read.
 
 There is no Android build and no iOS build. The window is Tk. A phone does not run it.
 
@@ -52,8 +52,8 @@ course in Foolbook.
 
 A deployment has an official course list. Anything not on that list is
 extra material: it is catalogued, it can be opened, and it keeps its own
-score, but it does not count toward the overall. ATT is one use of this.
-Its official list is ATT Master; rating tracks and anything else are extra.
+score, but it does not count toward the overall. The list is a curriculum
+file. Foolcourse does not ship one deployment's courses.
 
 Foolcourse is not affiliated with Asymetrix, Click2learn, or SumTotal.
 
@@ -66,15 +66,15 @@ python3 foolcourse.py --list path/to/courses  # print, no window
 python3 foolcourse.py --make path/to/courses  # curriculum maker
 python3 foolcourse.py --student alex        # _student/alex.fcs
 python3 foolcourse.py --port 8080             # viewer port, default 1337
-python3 foolcourse.py path/to/courses --curriculum att.curriculum.json
-python3 foolcourse.py path/to/courses --xml _curriculum/nida.programs.xml --curriculum _curriculum/nida.curriculum.json
+python3 foolcourse.py path/to/courses --curriculum path/to/curriculum.json
+python3 foolcourse.py path/to/courses --xml path/to/menu.xml --curriculum path/to/curriculum.json
 ```
 
 ## Default folders
 
 `_courses/` holds the books in a source checkout. `_curriculum/` holds curriculum files and is the default. With no arguments, Foolcourse catalogs `_courses/` and loads `_curriculum/example.curriculum.json`.
 
-The Windows folder is different. Books go in `courses/` next to `Foolcourse.bat`. The NIDA curriculum in `_curriculum/` is already packed. It is not a folder they pick.
+The Windows folder is different. Books go in `courses/` next to `Foolcourse.bat`. Whatever curriculum files are in `_curriculum/` are packed with it. The example is the one it loads when you do not name another.
 
 The example official course is `phone`: how to not walk while using your phone. `reading_maps` and `bus_times` are extra and do not exist.
 
@@ -85,22 +85,24 @@ or extra, name the curriculum and the official list, and save a
 curriculum file. `--curriculum` loads that file: the overall counts only
 its official list, and the window labels the track by that list's name.
 
-ATT is one curriculum. A second deployment makes its own file.
-
 ## Layout
 
-A course under a folder named `03_ATT_Master` (also `ATT_Master`, `0_MASTER3`) is official.
+A course can sit in `courses/` or in a folder inside it. The folder names
+are the subject and the module when you do not pass a menu. They do not
+decide which courses count.
 
 ```
 courses/
-  03_ATT_Master/
-    DC Circuits/
-      93951100.tbk
-  Other/
-    something.tbk
+  Getting around/
+    Street sense/
+      phone.fbk
+  Money/
+    Filing taxes/
+      do_i_file.fbk
 ```
 
-With `--xml courses.xml` the hierarchy and titles come from the Navy ATT menu export. Lessons in the `0_MASTER3` / ATT Master_3 menu are official. Lessons that only appear in a rating track are not.
+With `--xml menu.xml` the subjects, modules, and titles come from that
+menu. Which of those courses count is still the curriculum file.
 
 ## Scores
 

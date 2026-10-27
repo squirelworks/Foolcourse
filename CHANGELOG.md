@@ -1,4 +1,9 @@
 # Changelog
+
+## Unreleased
+
+- The NIDA curriculum is no longer part of this repo. A curriculum file names the official list. A menu only supplies subjects, modules, and titles.
+
 ## 1.0.1r2
 
 - Windows folder only. Unzip it and double-click `Foolcourse.bat`. Put the books in `courses`.

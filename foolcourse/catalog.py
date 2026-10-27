@@ -1,17 +1,12 @@
-"""Build a course catalog from a directory, optionally with courses.xml.
+"""Build a course catalog from a directory, optionally with a menu.
 
 A deployment has an official course list. A course on that list counts
 toward the overall score. Anything else is extra material: it is listed,
 it can be opened, and it keeps its own score, but it is not added into
 the overall.
 
-ATT is the first official list. A course is on it when either:
-
-- it lives under a folder named 03_ATT_Master (or an alias), or
-- its lesson id is in the ATT Master menu of a courses.xml
-  (courseid 0_MASTER3 / title ATT Master_3).
-
-A later deployment names its own list. The rule does not change.
+The list is a curriculum file. A folder name does not decide it, and a
+menu does not decide it. The menu supplies subjects, modules, and titles.
 """
 
 from __future__ import annotations
@@ -21,36 +16,13 @@ from pathlib import Path
 
 BOOK_EXTS = {".tbk", ".fbk", ".json", ".fsk"}
 
-# Folder names that mark the official track. Compared case-insensitively
-# after replacing spaces with underscores.
-OFFICIAL_FOLDERS = {
-    "03_att_master",
-    "03_att_master_3",
-    "att_master",
-    "att_master_3",
-    "0_master3",
-    "master3",
-}
-
-# courses.xml menu that is the official track.
-OFFICIAL_COURSEIDS = {"0_master3"}
-OFFICIAL_TITLES = {"att master_3", "att master", "03_att_master"}
-
-
-def _norm(name: str) -> str:
-    return (name or "").strip().lower().replace(" ", "_").replace("-", "_")
-
-
-def is_official_folder(name: str) -> bool:
-    return _norm(name) in OFFICIAL_FOLDERS
-
 
 def scan(root: Path, xml_path: Path | None = None) -> dict:
     """Return a catalog dict.
 
-    With an xml path the hierarchy and titles come from the menu export
+    With an xml path the hierarchy and titles come from the menu
     and files are matched by lesson id. Without one, the folder tree is
-    the catalog and a folder named 03_ATT_Master marks the official track.
+    the catalog. Nothing is official until a curriculum file says so.
     """
     root = Path(root)
     if xml_path and Path(xml_path).exists():
@@ -119,7 +91,6 @@ def _from_folders(root: Path) -> dict:
         parts = list(rel.parts)
         # subject / module / book, or module / book, or just book
         folders = parts[:-1]
-        official = any(is_official_folder(p) for p in folders)
         if len(folders) >= 2:
             subject, module = folders[0], folders[1]
         elif len(folders) == 1:
@@ -132,7 +103,7 @@ def _from_folders(root: Path) -> dict:
             "id": course_id,
             "title": title,
             "path": str(book),
-            "official": official,
+            "official": False,
         })
     return _pack(root, tree)
 
@@ -146,16 +117,11 @@ def _from_xml(root: Path, xml_path: Path) -> dict:
     for menu in doc.findall("Menu"):
         courseid = menu.get("courseid") or ""
         title = menu.get("title") or courseid or "Courses"
-        official_track = (
-            _norm(courseid) in OFFICIAL_COURSEIDS
-            or _norm(title) in OFFICIAL_TITLES
-            or is_official_folder(title)
-        )
-        modules = _modules(menu, files, official_track, seen)
+        modules = _modules(menu, files, seen)
         if modules:
             subjects.append({
                 "name": title,
-                "official": official_track,
+                "official": False,
                 "modules": modules,
             })
     # Books on disk that the menu does not name. Not official.
@@ -183,12 +149,11 @@ def _from_xml(root: Path, xml_path: Path) -> dict:
     }
 
 
-def _modules(menu, files: dict, official: bool, seen: set[str]) -> list[dict]:
-    """Modules under one program.
+def _modules(menu, files: dict, seen: set[str]) -> list[dict]:
+    """Modules under one subject.
 
-    The NIDA list is three menus deep: program, group, unit. A unit that
-    holds lessons becomes its own module, named "group / unit", so the
-    third level is not folded into the group and lost.
+    A menu three levels deep keeps the unit. The module name is
+    "group / unit", so the third level is not folded into the group.
     """
     modules = []
 
@@ -203,7 +168,7 @@ def _modules(menu, files: dict, official: bool, seen: set[str]) -> list[dict]:
                 "id": lid,
                 "title": item.get("title") or lid,
                 "path": path or "",
-                "official": official,
+                "official": False,
             })
             seen.add(lid.lower())
         if courses:
@@ -238,7 +203,7 @@ def _index_books(root: Path) -> dict[str, str]:
 def _pack(root: Path, tree: dict[str, dict[str, list[dict]]]) -> dict:
     subjects = []
     for subject, modules in tree.items():
-        official = is_official_folder(subject) or any(
+        official = any(
             c.get("official")
             for courses in modules.values()
             for c in courses

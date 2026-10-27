@@ -12,9 +12,8 @@ Score model
 Each course keeps the quiz answers it has seen. A course score is the
 percentage of those answers that were correct, and the best percentage
 is kept. The overall score is the mean of the best percentages for
-courses that belong to the official track (03_ATT_Master / ATT Master).
-Courses outside that track still have their own score; they are not
-added into the overall.
+courses on the official list. Courses that are not on that list still
+have their own score; they are not added into the overall.
 """
 
 from __future__ import annotations
