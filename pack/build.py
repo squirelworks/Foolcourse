@@ -125,10 +125,22 @@ def write_text(path: Path, text: str, *, crlf: bool = False, executable: bool = 
 
 
 def wheels_for(spec: dict, dest: Path) -> None:
-    if any(dest.glob("*.whl")):
+    names = [
+        item.split("==", 1)[0].split("[", 1)[0].replace("_", "-").lower()
+        for item in spec["packages"]
+    ]
+    found = []
+    if dest.is_dir():
+        found = [
+            path.name.split("-", 1)[0].replace("_", "-").lower()
+            for path in dest.glob("*.whl")
+        ]
+    if all(name in found for name in names):
         print(f"cached wheels {dest.name}", flush=True)
         return
-    dest.mkdir(parents=True, exist_ok=True)
+    if dest.exists():
+        shutil.rmtree(dest)
+    dest.mkdir(parents=True)
     command = [
         sys.executable, "-m", "pip", "download",
         *spec["packages"],
@@ -137,6 +149,9 @@ def wheels_for(spec: dict, dest: Path) -> None:
         "--implementation", "cp",
         "--abi", "cp312",
         "--only-binary=:all:",
+        # The folder is Python 3.12. A host on 3.14 would re-resolve
+        # cryptography's marker and demand a cffi that 3.12 does not use.
+        "--no-deps",
     ]
     for platform in spec["pip"]:
         command.extend(["--platform", platform])
