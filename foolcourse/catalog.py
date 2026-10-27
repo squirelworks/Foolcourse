@@ -17,7 +17,7 @@ import xml.etree.ElementTree as ET
 import zlib
 from pathlib import Path
 
-BOOK_EXTS = {".tbk", ".fbk", ".json", ".fsk"}
+BOOK_EXTS = {".tbk", ".fbk", ".fsk"}
 _TITLE = re.compile(r'"title"\s*:\s*"((?:\\.|[^"\\])*)"')
 
 
