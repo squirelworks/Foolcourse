@@ -3,18 +3,9 @@
   "official_name": "Filing taxes",
   "official": [
     "file_2026",
-    "find_current",
-    "do_i_file",
-    "papers",
-    "deduction",
-    "credits",
-    "file_free",
-    "after",
-    "they_change",
-    "official",
-    "read_it"
+    "find_current"
   ],
   "extras": [],
   "root": "_courses",
-  "notes": "file_2026 is tax year 2026, filed in 2027, with the amounts from IR-2025-103. find_current is how to look the next question up. A normal return can be done at taxslayer.com. Free File starts at IRS.gov/freefile. The shorter lessons are the earlier examples. Not tax advice."
+  "notes": "Two lessons. file_2026 is tax year 2026, filed in 2027. find_current is how to look the next question up. A normal return can be done at taxslayer.com. Free File starts at IRS.gov/freefile. Not tax advice."
 }

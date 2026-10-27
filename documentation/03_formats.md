@@ -20,7 +20,7 @@ Names a curriculum and its official list.
 {
   "name": "Money",
   "official_name": "Filing taxes",
-  "official": ["do_i_file", "papers", "deduction"],
+  "official": ["file_2026", "find_current"],
   "extras": [],
   "root": "_courses",
   "notes": ""

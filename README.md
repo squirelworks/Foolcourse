@@ -98,7 +98,7 @@ courses/
       phone.fbk
   Money/
     Filing taxes/
-      do_i_file.fbk
+      file_2026.fbk
 ```
 
 With `--xml menu.xml` the subjects, modules, and titles come from that
