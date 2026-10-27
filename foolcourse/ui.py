@@ -168,7 +168,8 @@ class Catalog:
         frame.columnconfigure(0, weight=1)
         tree = ttk.Treeview(frame, columns=("name",), show="headings", selectmode="browse")
         tree.heading("name", text=heading)
-        tree.column("name", width=320, minwidth=140, stretch=True)
+        tree.column("#0", width=0, minwidth=0, stretch=False)
+        tree.column("name", width=320, minwidth=80, stretch=True)
         scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
         tree.configure(yscrollcommand=scroll.set)
         tree.grid(row=0, column=0, sticky="nsew")
@@ -184,6 +185,7 @@ class Catalog:
         if self.debug:
             cols += ["id", "track"]
         tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
+        tree.column("#0", width=0, minwidth=0, stretch=False)
         labels = {
             "course": t(self.locale, "course"),
             "progress": t(self.locale, "progress"),
@@ -200,6 +202,7 @@ class Catalog:
         tree.configure(yscrollcommand=yscroll.set)
         tree.grid(row=0, column=0, sticky="nsew")
         yscroll.grid(row=0, column=1, sticky="ns")
+        tree.bind("<Configure>", lambda event, tree=tree: self._fit_course(tree, event))
         return tree, frame
 
     def _fit_name(self, tree, event):
@@ -210,6 +213,19 @@ class Catalog:
         if abs(int(tree.column("name", "width")) - target) < 4:
             return
         tree.column("name", width=target)
+
+    def _fit_course(self, tree, event):
+        """Keep the course text inside its pane. A wider column paints over the next list."""
+        if event.widget is not tree or event.width < 40:
+            return
+        fixed = 0
+        for key in ("progress", "score", "id", "track"):
+            if key in tree["columns"]:
+                fixed += int(tree.column(key, "width"))
+        target = max(80, event.width - fixed - 22)
+        if abs(int(tree.column("course", "width")) - target) < 4:
+            return
+        tree.column("course", width=target)
 
     def _layout(self):
         """Show the next list when one is chosen. Dividers stay draggable."""
