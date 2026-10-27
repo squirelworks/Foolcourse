@@ -45,3 +45,7 @@ A functional platform for more than one curriculum.
 - Extra material can be grouped (supplements, drills, outside reading)
   without becoming official
 - Progress and scores travel with the learner, not with one curriculum
+- A system's procedures stay in its `.fsk`. Foolbook runs that file.
+  It does not keep its own copy of `initializeBase`, `setupMenuPage`,
+  or the rest. Foolcourse 1 may still call a Python stand-in. Foolcourse 2
+  does not add another one.
