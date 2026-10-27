@@ -2,6 +2,8 @@
   "name": "Money",
   "official_name": "Filing taxes",
   "official": [
+    "file_2026",
+    "find_current",
     "do_i_file",
     "papers",
     "deduction",
@@ -14,5 +16,5 @@
   ],
   "extras": [],
   "root": "_courses",
-  "notes": "Example module. Tax year 2025, filed in 2026. they_change, official, and read_it teach that figures move and how to read IRS.gov. Not tax advice."
+  "notes": "file_2026 is tax year 2026, filed in 2027, with the amounts from IR-2025-103. find_current is how to look the next question up. A normal return can be done at taxslayer.com. Free File starts at IRS.gov/freefile. The shorter lessons are the earlier examples. Not tax advice."
 }

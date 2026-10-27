@@ -1,0 +1,2114 @@
+{
+  "id": "find_current",
+  "title": "How to find up-to-date information on filing taxes",
+  "subject": "Money",
+  "module": "Filing taxes",
+  "format_version": 1,
+  "pages": [
+    {
+      "id": "P0",
+      "text": [
+        "How to find the current information",
+        "This book is the lookup.",
+        "The other book is the 2026 return, with the 2026 amounts in it.",
+        "Here you learn which document answers which question."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P10"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P10",
+      "text": [
+        "Lesson menu",
+        "Pick a part, or go in order."
+      ],
+      "items": [
+        {
+          "label": "What you are looking up",
+          "page": "P0"
+        },
+        {
+          "label": "The year on the document",
+          "page": "P50"
+        },
+        {
+          "label": "Start at IRS.gov",
+          "page": "P90"
+        },
+        {
+          "label": "Which document",
+          "page": "P130"
+        },
+        {
+          "label": "Free filing",
+          "page": "P190"
+        },
+        {
+          "label": "Drafts",
+          "page": "P260"
+        },
+        {
+          "label": "Look up the deduction",
+          "page": "P290"
+        },
+        {
+          "label": "Look up whether you file",
+          "page": "P330"
+        },
+        {
+          "label": "The Free File page",
+          "page": "P370"
+        },
+        {
+          "label": "Check the software",
+          "page": "P420"
+        },
+        {
+          "label": "A lookup, start to finish",
+          "page": "P460"
+        },
+        {
+          "label": "The senior deduction lookup",
+          "page": "P520"
+        },
+        {
+          "label": "Five questions",
+          "page": "P570"
+        },
+        {
+          "label": "One sitting",
+          "page": "P630"
+        },
+        {
+          "label": "Wrong doors",
+          "page": "P680"
+        },
+        {
+          "label": "The documents, named",
+          "page": "P750"
+        },
+        {
+          "label": "Done",
+          "page": "P860"
+        },
+        {
+          "label": "Next",
+          "page": "P20"
+        }
+      ]
+    },
+    {
+      "id": "P20",
+      "text": [
+        "A question has a document",
+        "Who must file: the Form 1040 instructions for that year.",
+        "What is the standard deduction: the IRS inflation release for that year, and those same instructions.",
+        "How do I file for free: the IRS Free File page for that season."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P30"
+        },
+        {
+          "label": "Back",
+          "page": "P10"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P30",
+      "text": [
+        "You are not hunting a blog",
+        "A blog can point you at the document.",
+        "The document is the thing you read before you type a number."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P40"
+        },
+        {
+          "label": "Back",
+          "page": "P20"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P40",
+      "text": [
+        "Check",
+        "You need the standard deduction for the year on your form. What kind of page answers it?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The IRS inflation release for that year, and that year's Form 1040 instructions.",
+            "correct": true
+          },
+          {
+            "label": "The first ad in a search.",
+            "correct": false
+          },
+          {
+            "label": "A forum thread.",
+            "correct": false
+          }
+        ],
+        "again": "P0",
+        "next": "P50"
+      }
+    },
+    {
+      "id": "P50",
+      "text": [
+        "Match the year",
+        "The form, the instructions, and the news release have to be the same year.",
+        "A 2026 Form 1040 uses the 2026 instructions.",
+        "IR-2025-103 is the release that published the tax year 2026 amounts."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P60"
+        },
+        {
+          "label": "Back",
+          "page": "P40"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P60",
+      "text": [
+        "Filing season is not the tax year",
+        "The 2026 filing season accepted 2025 returns.",
+        "Tax year 2026 is the return you file in 2027.",
+        "The corner of the form is how you tell them apart."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P70"
+        },
+        {
+          "label": "Back",
+          "page": "P50"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P70",
+      "text": [
+        "Say it in one sentence",
+        "I am filing the return whose year is printed on the form, and I am reading the instructions with that same year."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P80"
+        },
+        {
+          "label": "Back",
+          "page": "P60"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P80",
+      "text": [
+        "Check",
+        "It is January 2027 and you are filing. Which form?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The Form 1040 that says 2026.",
+            "correct": true
+          },
+          {
+            "label": "The Form 1040 that says 2027, because that is the calendar year.",
+            "correct": false
+          },
+          {
+            "label": "Whichever PDF is easiest to download.",
+            "correct": false
+          }
+        ],
+        "again": "P50",
+        "next": "P90"
+      }
+    },
+    {
+      "id": "P90",
+      "text": [
+        "The site",
+        "The forms, the instructions, and Free File are on IRS.gov.",
+        "The free-file door is IRS.gov/freefile."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P100"
+        },
+        {
+          "label": "Back",
+          "page": "P80"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P100",
+      "text": [
+        "A look-alike is not the door",
+        "A site that looks like the IRS and sells a return is not the free offer.",
+        "You get to Free File by starting on IRS.gov."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P110"
+        },
+        {
+          "label": "Back",
+          "page": "P90"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P110",
+      "text": [
+        "Search from there",
+        "On IRS.gov, search the form number and the year.",
+        "Form 1040, instructions, 2026.",
+        "The PDF that opens should show that year."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P120"
+        },
+        {
+          "label": "Back",
+          "page": "P100"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P120",
+      "text": [
+        "Check",
+        "You want the IRS free software. Where do you begin?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "IRS.gov/freefile.",
+            "correct": true
+          },
+          {
+            "label": "A company's home page that says free.",
+            "correct": false
+          },
+          {
+            "label": "A search ad.",
+            "correct": false
+          }
+        ],
+        "again": "P90",
+        "next": "P130"
+      }
+    },
+    {
+      "id": "P130",
+      "text": [
+        "The form",
+        "Form 1040 is the return.",
+        "The lines are the blanks you fill."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P140"
+        },
+        {
+          "label": "Back",
+          "page": "P120"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P140",
+      "text": [
+        "The instructions",
+        "The instructions for that form, same year, tell you what each line means.",
+        "Who must file is a section in those instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P150"
+        },
+        {
+          "label": "Back",
+          "page": "P130"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P150",
+      "text": [
+        "The news release",
+        "IR-2025-103 is the short IRS announcement of the tax year 2026 amounts.",
+        "It names Revenue Procedure 2025-32 for the full table."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P160"
+        },
+        {
+          "label": "Back",
+          "page": "P140"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P160",
+      "text": [
+        "The revenue procedure",
+        "That is the table.",
+        "You open it when the news release is not specific enough."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P170"
+        },
+        {
+          "label": "Back",
+          "page": "P150"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P170",
+      "text": [
+        "Use them in that order",
+        "Line on the form, then the instruction for the line, then the release or the procedure if the instruction sends you to the year's dollar amount."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P180"
+        },
+        {
+          "label": "Back",
+          "page": "P160"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P180",
+      "text": [
+        "Check",
+        "You know the line, and you need to know what the line means. What do you open?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The instructions for that form and year.",
+            "correct": true
+          },
+          {
+            "label": "The revenue procedure, first, always.",
+            "correct": false
+          },
+          {
+            "label": "A video.",
+            "correct": false
+          }
+        ],
+        "again": "P130",
+        "next": "P190"
+      }
+    },
+    {
+      "id": "P190",
+      "text": [
+        "The government already does this",
+        "You do not have to pay a brand name to file a normal return.",
+        "The IRS runs Free File, Fillable Forms, and the volunteer programs."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P200"
+        },
+        {
+          "label": "Back",
+          "page": "P180"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P200",
+      "text": [
+        "Guided software",
+        "Free File guided software is for people under the income the IRS prints for that season.",
+        "For the season that filed 2025 returns, that line was adjusted gross income of $89,000 or less.",
+        "The page for the season you are filing prints the line that applies then."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P210"
+        },
+        {
+          "label": "Back",
+          "page": "P190"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P210",
+      "text": [
+        "Fillable Forms",
+        "Free File Fillable Forms are free at any income.",
+        "You are doing the form yourself, with the instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P220"
+        },
+        {
+          "label": "Back",
+          "page": "P200"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P220",
+      "text": [
+        "Volunteers and the military",
+        "VITA and TCE are volunteer preparers.",
+        "MilTax is the military community's free file.",
+        "The season announcement on IRS.gov names them."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P230"
+        },
+        {
+          "label": "Back",
+          "page": "P210"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P230",
+      "text": [
+        "TaxSlayer, if you just want it done",
+        "A normal W-2 return can be done at taxslayer.com.",
+        "That is a product, and it is enough.",
+        "It is not the same door as IRS Free File unless the IRS page lists it as a partner for that season."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P240"
+        },
+        {
+          "label": "Back",
+          "page": "P220"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P240",
+      "text": [
+        "TurboTax is optional",
+        "Nothing on the return requires TurboTax, H&R Block, or any other paid brand.",
+        "Paying more does not change the W-2."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P250"
+        },
+        {
+          "label": "Back",
+          "page": "P230"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P250",
+      "text": [
+        "Check",
+        "Your adjusted gross income is over the Free File guided limit printed for this season. What is still free?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "IRS Free File Fillable Forms.",
+            "correct": true
+          },
+          {
+            "label": "Nothing. You must buy TurboTax.",
+            "correct": false
+          },
+          {
+            "label": "Direct File, because it is always open.",
+            "correct": false
+          }
+        ],
+        "again": "P190",
+        "next": "P260"
+      }
+    },
+    {
+      "id": "P260",
+      "text": [
+        "A draft is marked",
+        "The IRS sometimes posts a draft of next year's form.",
+        "The 2026 Form 1040 had a draft up in September 2026.",
+        "The draft says it is not for filing."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P270"
+        },
+        {
+          "label": "Back",
+          "page": "P250"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P270",
+      "text": [
+        "Wait for the final",
+        "You file the final form for that year.",
+        "The instructions you use are the final instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P280"
+        },
+        {
+          "label": "Back",
+          "page": "P260"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P280",
+      "text": [
+        "Check",
+        "The PDF says DRAFT and not for filing. What do you do with it?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "You do not file it. You get the final form.",
+            "correct": true
+          },
+          {
+            "label": "You file it, because a draft is close enough.",
+            "correct": false
+          },
+          {
+            "label": "You use last year's form instead.",
+            "correct": false
+          }
+        ],
+        "again": "P260",
+        "next": "P290"
+      }
+    },
+    {
+      "id": "P290",
+      "text": [
+        "The question",
+        "What is the standard deduction on a 2026 return for a single person under 65?"
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P300"
+        },
+        {
+          "label": "Back",
+          "page": "P280"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P300",
+      "text": [
+        "The path",
+        "Open IR-2025-103, or Revenue Procedure 2025-32.",
+        "Or open the 2026 Form 1040 instructions and read the standard deduction section.",
+        "Either one is the IRS. A blog that repeats the number is not the source."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P310"
+        },
+        {
+          "label": "Back",
+          "page": "P290"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P310",
+      "text": [
+        "The amount",
+        "Single: $16,100.",
+        "Married filing jointly: $32,200.",
+        "Head of household: $24,150."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P320"
+        },
+        {
+          "label": "Back",
+          "page": "P300"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P320",
+      "text": [
+        "Check",
+        "You found $16,100 on a blog and nowhere else. What do you do?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "Confirm it in IR-2025-103 or the 2026 instructions before you use it.",
+            "correct": true
+          },
+          {
+            "label": "Type it. A blog is enough.",
+            "correct": false
+          },
+          {
+            "label": "Use the 2025 amount instead, to be safe.",
+            "correct": false
+          }
+        ],
+        "again": "P290",
+        "next": "P330"
+      }
+    },
+    {
+      "id": "P330",
+      "text": [
+        "The question",
+        "Do I have to file the 2026 return?"
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P340"
+        },
+        {
+          "label": "Back",
+          "page": "P320"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P340",
+      "text": [
+        "The path",
+        "Open the 2026 Form 1040 instructions.",
+        "Find who must file.",
+        "Compare your gross income to the standard deduction for your status, and check the self-employment test."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P350"
+        },
+        {
+          "label": "Back",
+          "page": "P330"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P350",
+      "text": [
+        "The tests you already know",
+        "Under 65, the threshold is the standard deduction: $16,100, $32,200, or $24,150.",
+        "Net self-employment of $400 or more: file.",
+        "Married filing separately: the instructions' $5 test."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P360"
+        },
+        {
+          "label": "Back",
+          "page": "P340"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P360",
+      "text": [
+        "Check",
+        "Where is the who-must-file test written?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "In the 2026 Form 1040 instructions.",
+            "correct": true
+          },
+          {
+            "label": "Only in TaxSlayer.",
+            "correct": false
+          },
+          {
+            "label": "It is different in every state, so the federal form does not say.",
+            "correct": false
+          }
+        ],
+        "again": "P330",
+        "next": "P370"
+      }
+    },
+    {
+      "id": "P370",
+      "text": [
+        "Open the page, then read it",
+        "Go to IRS.gov/freefile.",
+        "The page names the season and the income line for guided software."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P380"
+        },
+        {
+          "label": "Back",
+          "page": "P360"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P380",
+      "text": [
+        "The 2026 season, as an example of reading it",
+        "That season filed 2025 returns.",
+        "Guided software was for adjusted gross income of $89,000 or less.",
+        "The IRS listed eight partners. You use the list on the page, not a list you remember."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P390"
+        },
+        {
+          "label": "Back",
+          "page": "P370"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P390",
+      "text": [
+        "Partners set their own extra rules",
+        "A partner can limit by age, state, or military status.",
+        "The IRS page says so.",
+        "If one partner says no, you pick another partner from that page."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P400"
+        },
+        {
+          "label": "Back",
+          "page": "P380"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P400",
+      "text": [
+        "Fillable Forms do not use that income line",
+        "They are on the same IRS Free File area.",
+        "Any income. You follow the instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P410"
+        },
+        {
+          "label": "Back",
+          "page": "P390"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P410",
+      "text": [
+        "Check",
+        "A partner's own website says you do not qualify for the free offer. What do you do?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "Go back to IRS.gov/freefile and pick another partner on the IRS list.",
+            "correct": true
+          },
+          {
+            "label": "Buy TurboTax.",
+            "correct": false
+          },
+          {
+            "label": "Use the partner's paid product, because the IRS said to.",
+            "correct": false
+          }
+        ],
+        "again": "P370",
+        "next": "P420"
+      }
+    },
+    {
+      "id": "P420",
+      "text": [
+        "The interview is not the law",
+        "TaxSlayer asks questions and fills the form.",
+        "The form and the instructions are still the return."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P430"
+        },
+        {
+          "label": "Back",
+          "page": "P410"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P430",
+      "text": [
+        "When an answer looks wrong",
+        "Open the 2026 instructions for that line.",
+        "If the software and the instructions disagree, the instructions win.",
+        "You can also open the form and see what it typed."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P440"
+        },
+        {
+          "label": "Back",
+          "page": "P420"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P440",
+      "text": [
+        "Same W-2, same deduction, same tax",
+        "TaxSlayer and a Free File partner, given the same facts, fill the same Form 1040.",
+        "TurboTax does not get a different standard deduction.",
+        "The $16,100 is the IRS amount, not a software amount."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P450"
+        },
+        {
+          "label": "Back",
+          "page": "P430"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P450",
+      "text": [
+        "Check",
+        "TaxSlayer shows a standard deduction that is not the amount in the 2026 instructions. What do you trust?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The 2026 instructions.",
+            "correct": true
+          },
+          {
+            "label": "TaxSlayer, because software is newer than a PDF.",
+            "correct": false
+          },
+          {
+            "label": "Whichever number is larger.",
+            "correct": false
+          }
+        ],
+        "again": "P420",
+        "next": "P460"
+      }
+    },
+    {
+      "id": "P460",
+      "text": [
+        "Write the question down",
+        "Example: what is the 2026 standard deduction if I file as head of household?"
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P470"
+        },
+        {
+          "label": "Back",
+          "page": "P450"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P470",
+      "text": [
+        "Name the year",
+        "The form you will file says 2026.",
+        "So the instructions have to say 2026."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P480"
+        },
+        {
+          "label": "Back",
+          "page": "P460"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P480",
+      "text": [
+        "Open the release",
+        "IR-2025-103 lists head of household at $24,150.",
+        "Revenue Procedure 2025-32 is the table behind that sentence."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P490"
+        },
+        {
+          "label": "Back",
+          "page": "P470"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P490",
+      "text": [
+        "Open the instructions",
+        "The 2026 Form 1040 instructions have the same three amounts.",
+        "You want to see them in the instructions, because that is the booklet for the form."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P500"
+        },
+        {
+          "label": "Back",
+          "page": "P480"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P500",
+      "text": [
+        "Then type it",
+        "Only after those two agree.",
+        "$24,150 for head of household."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P510"
+        },
+        {
+          "label": "Back",
+          "page": "P490"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P510",
+      "text": [
+        "Check",
+        "The release says $24,150 and a blog says $23,625. Which do you type on the 2026 return?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "$24,150. $23,625 was the prior year.",
+            "correct": true
+          },
+          {
+            "label": "$23,625, because it is smaller.",
+            "correct": false
+          },
+          {
+            "label": "The average of the two.",
+            "correct": false
+          }
+        ],
+        "again": "P460",
+        "next": "P520"
+      }
+    },
+    {
+      "id": "P520",
+      "text": [
+        "The question",
+        "Is there an extra deduction for being 65, besides the add-on to the standard deduction?"
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P530"
+        },
+        {
+          "label": "Back",
+          "page": "P510"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P530",
+      "text": [
+        "Where you look",
+        "The IRS page titled Working Families Tax Cuts, for individuals and workers.",
+        "It is on IRS.gov, not in a product brochure."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P540"
+        },
+        {
+          "label": "Back",
+          "page": "P520"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P540",
+      "text": [
+        "What it says",
+        "For 2025 through 2028, $6,000 for each person who is 65 or older and qualifies.",
+        "$12,000 if both spouses qualify.",
+        "It is in addition to the extra standard deduction for age."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P550"
+        },
+        {
+          "label": "Back",
+          "page": "P530"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P550",
+      "text": [
+        "Then the line",
+        "The 2026 Form 1040 instructions name the line.",
+        "You do not need the line number memorized before you open them."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P560"
+        },
+        {
+          "label": "Back",
+          "page": "P540"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P560",
+      "text": [
+        "Check",
+        "Where do you confirm the $6,000 senior deduction?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "On the IRS Working Families Tax Cuts page, then on the line the 2026 instructions name.",
+            "correct": true
+          },
+          {
+            "label": "In a TurboTax commercial.",
+            "correct": false
+          },
+          {
+            "label": "It does not exist, because the standard deduction already includes everything.",
+            "correct": false
+          }
+        ],
+        "again": "P520",
+        "next": "P570"
+      }
+    },
+    {
+      "id": "P570",
+      "text": [
+        "Question 1",
+        "Do I have to file?",
+        "Document: the who-must-file section of that year's Form 1040 instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P580"
+        },
+        {
+          "label": "Back",
+          "page": "P560"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P580",
+      "text": [
+        "Question 2",
+        "What is the standard deduction?",
+        "Document: that year's inflation release, and the same year's instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P590"
+        },
+        {
+          "label": "Back",
+          "page": "P570"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P590",
+      "text": [
+        "Question 3",
+        "How do I file for free?",
+        "Document: IRS.gov/freefile for the season you are in."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P600"
+        },
+        {
+          "label": "Back",
+          "page": "P580"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P600",
+      "text": [
+        "Question 4",
+        "Is this PDF a form I can file?",
+        "Document: the PDF itself. If it says draft, or not for filing, it is not the form."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P610"
+        },
+        {
+          "label": "Back",
+          "page": "P590"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P610",
+      "text": [
+        "Question 5",
+        "Did the software use the right deduction?",
+        "Document: the instructions. Compare the number on the form it filled in."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P620"
+        },
+        {
+          "label": "Back",
+          "page": "P600"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P620",
+      "text": [
+        "Check",
+        "You want to know if a PDF is fileable. What do you read?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The notice on the PDF. A draft says it is not for filing.",
+            "correct": true
+          },
+          {
+            "label": "The website that linked it.",
+            "correct": false
+          },
+          {
+            "label": "The file size.",
+            "correct": false
+          }
+        ],
+        "again": "P570",
+        "next": "P630"
+      }
+    },
+    {
+      "id": "P630",
+      "text": [
+        "Before you type",
+        "Put the W-2s on the table.",
+        "Open IRS.gov and confirm you are on the real site.",
+        "Open the 2026 instructions, even if you only use them when something looks odd."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P640"
+        },
+        {
+          "label": "Back",
+          "page": "P620"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P640",
+      "text": [
+        "Choose the door",
+        "TaxSlayer, if you want one program and a normal return.",
+        "IRS.gov/freefile, if you want the government free offer.",
+        "Not a search ad. Not TurboTax unless you already decided to pay for it."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P650"
+        },
+        {
+          "label": "Back",
+          "page": "P630"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P650",
+      "text": [
+        "While you type",
+        "Box 1 and box 2 from each W-2.",
+        "Status as of December 31.",
+        "Standard deduction from the 2026 instructions."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P660"
+        },
+        {
+          "label": "Back",
+          "page": "P640"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P660",
+      "text": [
+        "Before you send",
+        "Look at the Form 1040 the software produced.",
+        "The year in the corner is 2026.",
+        "The deduction matches the instructions.",
+        "Then e-file, and save the copy and the confirmation."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P670"
+        },
+        {
+          "label": "Back",
+          "page": "P650"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P670",
+      "text": [
+        "Check",
+        "You are ready to send. What do you check on the form the software produced?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The year is 2026, and the deduction matches the 2026 instructions.",
+            "correct": true
+          },
+          {
+            "label": "That you paid for the most expensive product.",
+            "correct": false
+          },
+          {
+            "label": "That you never opened the instructions.",
+            "correct": false
+          }
+        ],
+        "again": "P630",
+        "next": "P680"
+      }
+    },
+    {
+      "id": "P680",
+      "text": [
+        "A search ad",
+        "The first result is often an ad.",
+        "The ad is not IRS.gov.",
+        "Type IRS.gov yourself, or use a result whose address is IRS.gov."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P690"
+        },
+        {
+          "label": "Back",
+          "page": "P670"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P690",
+      "text": [
+        "The company's free offer",
+        "A company can say free and then charge.",
+        "The IRS free offer is the one you entered from IRS.gov/freefile."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P700"
+        },
+        {
+          "label": "Back",
+          "page": "P680"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P700",
+      "text": [
+        "Last year's PDF",
+        "A saved 2025 instruction booklet answers the 2025 return.",
+        "It is the wrong booklet for the form that says 2026."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P710"
+        },
+        {
+          "label": "Back",
+          "page": "P690"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P710",
+      "text": [
+        "A video with a number",
+        "A video can show you which line.",
+        "You still read the number off the instructions or the release."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P720"
+        },
+        {
+          "label": "Back",
+          "page": "P700"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P720",
+      "text": [
+        "Memory",
+        "You may remember $15,750.",
+        "That was the single standard deduction for 2025.",
+        "The 2026 amount for the same person is $16,100. The release is how you know."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P730"
+        },
+        {
+          "label": "Back",
+          "page": "P710"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P730",
+      "text": [
+        "Direct File",
+        "Do not build the plan around Direct File.",
+        "The IRS free-option list for the 2026 season did not include it."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P740"
+        },
+        {
+          "label": "Back",
+          "page": "P720"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P740",
+      "text": [
+        "Check",
+        "You remember the single standard deduction as $15,750. What is that number?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The 2025 amount. The 2026 amount is $16,100.",
+            "correct": true
+          },
+          {
+            "label": "The 2026 amount.",
+            "correct": false
+          },
+          {
+            "label": "A number TaxSlayer invented.",
+            "correct": false
+          }
+        ],
+        "again": "P680",
+        "next": "P750"
+      }
+    },
+    {
+      "id": "P750",
+      "text": [
+        "Form 1040",
+        "The return. The year is in the corner."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P760"
+        },
+        {
+          "label": "Back",
+          "page": "P740"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P760",
+      "text": [
+        "Instructions for Form 1040",
+        "Same year as the form.",
+        "Who must file, the standard deduction, and what each line means."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P770"
+        },
+        {
+          "label": "Back",
+          "page": "P750"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P770",
+      "text": [
+        "IR-2025-103",
+        "The IRS news release of the tax year 2026 inflation adjustments.",
+        "Dated October 9, 2025.",
+        "It says the amounts apply to returns filed in 2027."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P780"
+        },
+        {
+          "label": "Back",
+          "page": "P760"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P780",
+      "text": [
+        "Revenue Procedure 2025-32",
+        "The full table that release points to."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P790"
+        },
+        {
+          "label": "Back",
+          "page": "P770"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P790",
+      "text": [
+        "IRS.gov/freefile",
+        "The door to guided free software and Fillable Forms.",
+        "Read the income line and the partner list for the season you are in."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P800"
+        },
+        {
+          "label": "Back",
+          "page": "P780"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P800",
+      "text": [
+        "Form W-2",
+        "Box 1 wages. Box 2 federal withholding.",
+        "One from each employer."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P810"
+        },
+        {
+          "label": "Back",
+          "page": "P790"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P810",
+      "text": [
+        "Form 4868",
+        "More time to file. Not more time to pay."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P820"
+        },
+        {
+          "label": "Back",
+          "page": "P800"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P820",
+      "text": [
+        "Working Families Tax Cuts page",
+        "The IRS page for the individual provisions.",
+        "The $6,000 senior deduction for 2025 through 2028 is stated there."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P830"
+        },
+        {
+          "label": "Back",
+          "page": "P810"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P830",
+      "text": [
+        "Form 1040-ES",
+        "The estimated-tax form for the year.",
+        "The 2026 edition prints the extra standard deduction for age or blindness: $2,050 unmarried, $1,650 for each qualifying spouse."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P840"
+        },
+        {
+          "label": "Back",
+          "page": "P820"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P840",
+      "text": [
+        "Your own copy",
+        "The PDF of the return you filed, the W-2s, and the acceptance.",
+        "That is your record. It is not a source for next year's dollar amounts."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P850"
+        },
+        {
+          "label": "Back",
+          "page": "P830"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P850",
+      "text": [
+        "Check",
+        "Which document is the full table of the 2026 inflation adjustments?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "Revenue Procedure 2025-32.",
+            "correct": true
+          },
+          {
+            "label": "Form 4868.",
+            "correct": false
+          },
+          {
+            "label": "The TaxSlayer home page.",
+            "correct": false
+          }
+        ],
+        "again": "P750",
+        "next": "P860"
+      }
+    },
+    {
+      "id": "P860",
+      "text": [
+        "The habit",
+        "Read the year on the form.",
+        "Open the instructions for that year.",
+        "For a dollar amount set for the year, open the IRS release that published it.",
+        "For free filing, start at IRS.gov/freefile."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P870"
+        },
+        {
+          "label": "Back",
+          "page": "P850"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P870",
+      "text": [
+        "A normal return",
+        "TaxSlayer is enough.",
+        "TurboTax is not required.",
+        "The IRS already offers Free File, Fillable Forms, VITA, TCE, and MilTax."
+      ],
+      "items": [
+        {
+          "label": "Next",
+          "page": "P880"
+        },
+        {
+          "label": "Back",
+          "page": "P860"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    },
+    {
+      "id": "P880",
+      "text": [
+        "Check",
+        "You are about to type a dollar amount from memory. What do you open first?"
+      ],
+      "quiz": {
+        "choices": [
+          {
+            "label": "The instructions for the form year, or the IRS release that set that amount.",
+            "correct": true
+          },
+          {
+            "label": "The most expensive software.",
+            "correct": false
+          },
+          {
+            "label": "Nothing. Memory is the source.",
+            "correct": false
+          }
+        ],
+        "again": "P860",
+        "next": "P890"
+      }
+    },
+    {
+      "id": "P890",
+      "text": [
+        "End of the lesson",
+        "Match the year on the form to the instructions.",
+        "Start free filing at IRS.gov.",
+        "A normal return does not need TurboTax."
+      ],
+      "items": [
+        {
+          "label": "Back",
+          "page": "P880"
+        },
+        {
+          "label": "Menu",
+          "page": "P10"
+        }
+      ]
+    }
+  ],
+  "notes": "How to match a form year to its instructions, the IRS release, and IRS.gov/freefile. Not tax advice.",
+  "format": "json"
+}
