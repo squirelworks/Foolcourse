@@ -8,6 +8,7 @@ progress/progress.json
 _student/*.fcs
 !_student/example.student.fcs
 _student/window.json
+_student/courses.path
 dist/
 pack/cache/
 

@@ -213,17 +213,19 @@ def ask_courses(locale: str = "en") -> Path | None:
 
 
 def resolve_courses(given: Path | None, *, ask: bool) -> Path:
-    """A path on the command line wins. Otherwise use the remembered folder.
+    """A path on the command line wins.
 
-    A portable copy uses ``courses`` beside the program when that folder
-    already has books, and does not ask. An empty one asks once. A source
-    checkout uses its own ``_courses`` folder and does not ask.
+    A portable copy, such as the NIDA app, uses ``courses`` beside itself
+    and remembers another folder inside that copy. A source checkout always
+    uses its own ``_courses`` and does not keep a folder from another program.
     """
     if given is not None:
         folder = given.expanduser()
-        if folder.is_dir():
+        if folder.is_dir() and portable():
             remember_courses(folder)
         return folder
+    if not portable():
+        return dev_courses_root()
     saved = remembered_courses()
     if saved is not None:
         return saved
@@ -231,15 +233,13 @@ def resolve_courses(given: Path | None, *, ask: bool) -> Path:
     if holds_books(dropped):
         remember_courses(dropped)
         return dropped
-    if portable() and ask:
+    if ask:
         chosen = ask_courses()
         if chosen is not None:
             remember_courses(chosen)
             return chosen
-    if portable():
-        dropped.mkdir(parents=True, exist_ok=True)
-        return dropped
-    return dev_courses_root()
+    dropped.mkdir(parents=True, exist_ok=True)
+    return dropped
 
 
 def default_curriculum() -> Path | None:

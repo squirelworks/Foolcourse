@@ -22,7 +22,7 @@ from foolcourse.progress.progress import Progress, default_path, student_path
 from foolcourse.catalog import official_ids, scan
 from foolcourse.locale import t
 from foolcourse.curriculum import apply, load as load_curriculum
-from foolcourse.home import remember_courses, load_window, remember_window, fit_geometry, screen_geometry
+from foolcourse.home import remember_courses, load_window, remember_window, fit_geometry, screen_geometry, portable
 
 
 
@@ -370,7 +370,8 @@ class Catalog:
         p = filedialog.askdirectory(title=t(self.locale, "courses_folder"))
         if p:
             self.courses_root = Path(p)
-            remember_courses(self.courses_root)
+            if portable():
+                remember_courses(self.courses_root)
             self.subject_i = None
             self.module_i = None
             self._reload()

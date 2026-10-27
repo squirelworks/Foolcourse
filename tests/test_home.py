@@ -30,6 +30,11 @@ class HomeTests(unittest.TestCase):
             self.assertTrue(holds_books(root / "courses"))
             self.assertEqual(found, (root / "courses").resolve())
 
+    def test_a_source_checkout_does_not_open_a_remembered_folder(self):
+        from foolcourse.home import dev_courses_root
+        found = resolve_courses(None, ask=False)
+        self.assertEqual(found, dev_courses_root())
+
     def test_a_remembered_folder_wins(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
