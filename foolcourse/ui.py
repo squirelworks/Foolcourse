@@ -669,10 +669,42 @@ class Catalog:
                 self._viewer.wait(timeout=2)
             except Exception:
                 self._viewer.kill()
-        self._viewer = subprocess.Popen(cmd)
+        previous = getattr(self, "_viewer_log", None)
+        if previous is not None:
+            try:
+                previous.close()
+            except OSError:
+                pass
+        log_path = self.progress.path.with_name("foolbook.log")
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log = open(log_path, "w", encoding="utf-8")
+        self._viewer = subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT)
+        self._viewer_log = log
         self.progress.touch(cid)
         self._fill_courses()
         self.status.config(text=f"Opened {cid}")
+        self.root.after(800, self._check_viewer)
+
+    def _check_viewer(self):
+        viewer = self._viewer
+        if viewer is None or viewer.poll() is None:
+            return
+        log = getattr(self, "_viewer_log", None)
+        if log is not None:
+            try:
+                log.close()
+            except OSError:
+                pass
+        text = ""
+        path = self.progress.path.with_name("foolbook.log")
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace").strip()[-800:]
+        except OSError:
+            pass
+        messagebox.showerror(
+            t(self.locale, "app"),
+            text or f"Foolbook exited ({viewer.returncode}).",
+        )
 
 
 
