@@ -7,6 +7,7 @@ progress/progress.json
 # live student records; the example stays
 _student/*.fcs
 !_student/example.student.fcs
+_student/window.json
 dist/
 pack/cache/
 

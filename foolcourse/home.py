@@ -7,6 +7,8 @@ The curriculum ships with the program. On Windows the books go in
 from __future__ import annotations
 
 import os
+import json
+import re
 import sys
 from pathlib import Path
 
@@ -57,6 +59,92 @@ def remembered_courses() -> Path | None:
 
 def remember_courses(folder: Path) -> None:
     _courses_file().write_text(str(Path(folder).resolve()) + "\n", encoding="utf-8")
+
+
+_GEOM = re.compile(r"^(\d+)x(\d+)([+-]\d+)([+-]\d+)$")
+
+
+def screen_geometry(sw: int, sh: int) -> str:
+    """First run: most of the screen, not a fixed 1280x640."""
+    sw = max(int(sw), 1)
+    sh = max(int(sh), 1)
+    w = min(sw, max(900, int(sw * 0.88)))
+    h = min(sh, max(420, int(sh * 0.84)))
+    if sw > 960:
+        w = min(w, sw - 48)
+    if sh > 520:
+        h = min(h, sh - 72)
+    w = max(640, min(w, sw))
+    h = max(400, min(h, sh))
+    x = max(0, (sw - w) // 2)
+    y = max(0, (sh - h) // 8)
+    return f"{w}x{h}+{x}+{y}"
+
+
+def fit_geometry(geometry: str, vx: int, vy: int, vw: int, vh: int) -> str | None:
+    """Put a saved window back, shrunk to the desktop. None if it would be off screen."""
+    match = _GEOM.match((geometry or "").strip())
+    if not match or vw < 200 or vh < 200:
+        return None
+    w, h = int(match.group(1)), int(match.group(2))
+    x, y = int(match.group(3)), int(match.group(4))
+    w = max(640, min(w, vw))
+    h = max(400, min(h, vh))
+    if x > vx + vw - 80 or y > vy + vh - 60:
+        return None
+    if x + min(w, 200) < vx or y + min(h, 80) < vy:
+        return None
+    return f"{w}x{h}{x:+d}{y:+d}"
+
+
+def _sashes(raw) -> dict:
+    if not isinstance(raw, dict):
+        return {}
+    out = {}
+    for key, value in raw.items():
+        if not isinstance(value, list) or not value:
+            continue
+        positions = []
+        for item in value:
+            if isinstance(item, bool) or not isinstance(item, (int, float)):
+                positions = []
+                break
+            positions.append(int(item))
+        if positions:
+            out[str(key)] = positions
+    return out
+
+
+def _window_file() -> Path:
+    return student_dir() / "window.json"
+
+
+def load_window() -> dict:
+    """The last catalog window: size, whether it was maximized, column dividers."""
+    path = _window_file()
+    data = {}
+    if path.is_file():
+        try:
+            loaded = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            loaded = {}
+        if isinstance(loaded, dict):
+            data = loaded
+    geometry = data.get("geometry")
+    return {
+        "geometry": geometry if isinstance(geometry, str) else "",
+        "zoomed": bool(data.get("zoomed")),
+        "sashes": _sashes(data.get("sashes")),
+    }
+
+
+def remember_window(geometry: str | None, zoomed: bool, sashes: dict) -> None:
+    body = {
+        "geometry": geometry or "",
+        "zoomed": bool(zoomed),
+        "sashes": _sashes(sashes),
+    }
+    _window_file().write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
 
 
 def bundled_courses() -> Path:

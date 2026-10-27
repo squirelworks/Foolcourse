@@ -22,7 +22,7 @@ from foolcourse.progress.progress import Progress, default_path, student_path
 from foolcourse.catalog import official_ids, scan
 from foolcourse.locale import t
 from foolcourse.curriculum import apply, load as load_curriculum
-from foolcourse.home import remember_courses
+from foolcourse.home import remember_courses, load_window, remember_window, fit_geometry, screen_geometry
 
 
 
@@ -110,13 +110,22 @@ class Catalog:
 
         self.root = tk.Tk()
         self.root.title(t(self.locale, "app"))
-        self.root.geometry("1280x640")
+        saved = load_window()
+        self._sash_memory = saved["sashes"]
+        self._saved_zoom = saved["zoomed"]
+        self._normal_geometry = saved["geometry"] or None
+        self._ui_ready = False
+        self._restoring = False
+        self._save_after = None
+        self._apply_geometry()
         self.root.minsize(900, 420)
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
+        self.root.bind("<Configure>", self._on_configure)
         _row_style(self.root)
         self._build()
         self._reload()
         self.root.bind("<FocusIn>", lambda _e: self._refresh_scores())
+        self.root.after_idle(self._finish_open)
         self.root.mainloop()
 
     def _build(self):
@@ -137,6 +146,7 @@ class Catalog:
 
         self.panes = ttk.Panedwindow(self.root, orient="horizontal")
         self.panes.pack(fill="both", expand=True, padx=4, pady=(0, 4))
+        self.panes.bind("<ButtonRelease-1>", self._on_sash)
         self._shown = None
 
         self.sub_tree, self.sub_frame = self._list(self.panes, t(self.locale, "subject"))
@@ -218,6 +228,105 @@ class Catalog:
         self._shown = shown
         self.root.after_idle(self._place_sashes)
 
+    def _apply_geometry(self):
+        self.root.update_idletasks()
+        sw = self.root.winfo_screenwidth()
+        sh = self.root.winfo_screenheight()
+        try:
+            box = (
+                self.root.winfo_vrootx(),
+                self.root.winfo_vrooty(),
+                self.root.winfo_vrootwidth(),
+                self.root.winfo_vrootheight(),
+            )
+        except tk.TclError:
+            box = (0, 0, sw, sh)
+        if box[2] < 200 or box[3] < 200:
+            box = (0, 0, sw, sh)
+        fitted = fit_geometry(self._normal_geometry or "", *box)
+        chosen = fitted or screen_geometry(sw, sh)
+        self._normal_geometry = chosen
+        self.root.geometry(chosen)
+
+    def _finish_open(self):
+        """Maximize after the first size is applied, then start remembering drags."""
+        self._restoring = True
+        if self._saved_zoom:
+            self._zoom()
+        self.root.after(250, self._mark_ready)
+
+    def _mark_ready(self):
+        self._restoring = False
+        self._ui_ready = True
+
+    def _zoom(self):
+        try:
+            if self.root.tk.call("tk", "windowingsystem") == "win32":
+                self.root.state("zoomed")
+                return
+        except tk.TclError:
+            pass
+        try:
+            self.root.attributes("-zoomed", True)
+            return
+        except tk.TclError:
+            pass
+        try:
+            self.root.state("zoomed")
+        except tk.TclError:
+            return
+
+    def _is_zoomed(self) -> bool:
+        try:
+            if self.root.tk.call("tk", "windowingsystem") == "win32":
+                return str(self.root.state()) == "zoomed"
+        except tk.TclError:
+            return False
+        try:
+            return bool(self.root.attributes("-zoomed"))
+        except tk.TclError:
+            return False
+
+    def _on_configure(self, event):
+        if event.widget is not self.root or not self._ui_ready or self._restoring:
+            return
+        if self._save_after is not None:
+            try:
+                self.root.after_cancel(self._save_after)
+            except tk.TclError:
+                pass
+        self._save_after = self.root.after(400, self._save_window)
+
+    def _on_sash(self, _event):
+        self._remember_sashes()
+        if self._ui_ready:
+            self._save_window()
+
+    def _remember_sashes(self):
+        try:
+            count = len(self.panes.panes())
+            if count < 2:
+                return
+            positions = [int(self.panes.sashpos(i)) for i in range(count - 1)]
+        except tk.TclError:
+            return
+        if any(pos < 40 for pos in positions):
+            return
+        self._sash_memory[str(count)] = positions
+
+    def _save_window(self):
+        self._save_after = None
+        if not self._ui_ready:
+            return
+        try:
+            zoomed = self._is_zoomed()
+            if not zoomed:
+                self._normal_geometry = self.root.geometry()
+            self._remember_sashes()
+            remember_window(self._normal_geometry, zoomed, self._sash_memory)
+        except tk.TclError:
+            return
+
     def _place_sashes(self):
         try:
             self.panes.update_idletasks()
@@ -227,12 +336,18 @@ class Catalog:
         if width < 200:
             return
         n = len(self.panes.panes())
+        saved = self._sash_memory.get(str(n))
         try:
+            if n >= 2 and isinstance(saved, list) and len(saved) == n - 1:
+                for i in range(n - 2, -1, -1):
+                    room = width - 80 - (n - 2 - i) * 80
+                    self.panes.sashpos(i, max(80, min(int(saved[i]), room)))
+                return
             if n == 2:
-                self.panes.sashpos(0, max(280, int(width * 0.42)))
+                self.panes.sashpos(0, max(280, min(int(width * 0.42), width - 160)))
             elif n >= 3:
-                self.panes.sashpos(1, max(640, int(width * 0.62)))
-                self.panes.sashpos(0, max(280, int(width * 0.30)))
+                self.panes.sashpos(1, max(280, min(int(width * 0.62), width - 160)))
+                self.panes.sashpos(0, max(200, min(int(width * 0.30), width - 320)))
         except tk.TclError:
             return
 
@@ -430,6 +545,8 @@ class Catalog:
             s.close()
 
     def _on_close(self):
+        self._ui_ready = True
+        self._save_window()
         self._stop_viewer()
         self.root.destroy()
 
