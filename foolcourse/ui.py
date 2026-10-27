@@ -110,6 +110,7 @@ class Catalog:
 
         self.root = tk.Tk()
         self.root.title(t(self.locale, "app"))
+        self.root.minsize(900, 420)
         saved = load_window()
         self._sash_memory = saved["sashes"]
         self._saved_zoom = saved["zoomed"]
@@ -118,7 +119,6 @@ class Catalog:
         self._restoring = False
         self._save_after = None
         self._apply_geometry()
-        self.root.minsize(900, 420)
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         self.root.bind("<Configure>", self._on_configure)
         _row_style(self.root)
@@ -245,9 +245,8 @@ class Catalog:
         self.root.after_idle(self._place_sashes)
 
     def _apply_geometry(self):
-        self.root.update_idletasks()
-        sw = self.root.winfo_screenwidth()
-        sh = self.root.winfo_screenheight()
+        sw = max(self.root.winfo_screenwidth(), 1)
+        sh = max(self.root.winfo_screenheight(), 1)
         try:
             box = (
                 self.root.winfo_vrootx(),

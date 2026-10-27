@@ -11,10 +11,14 @@ menu does not decide it. The menu supplies subjects, modules, and titles.
 
 from __future__ import annotations
 
+import json
+import re
 import xml.etree.ElementTree as ET
+import zlib
 from pathlib import Path
 
 BOOK_EXTS = {".tbk", ".fbk", ".json", ".fsk"}
+_TITLE = re.compile(r'"title"\s*:\s*"((?:\\.|[^"\\])*)"')
 
 
 def scan(root: Path, xml_path: Path | None = None) -> dict:
@@ -32,28 +36,43 @@ def scan(root: Path, xml_path: Path | None = None) -> dict:
 
 
 def _book_title(path: Path) -> str:
-    """Title from a sibling .json or an .fbk envelope. Empty if unreadable."""
-    import json, zlib
+    """Title from the front of a book. Do not unpack the pictures."""
     try:
-        if path.suffix.lower() == ".json":
-            data = json.loads(path.read_text(encoding="utf-8"))
-        elif path.suffix.lower() == ".fbk":
-            twin = path.with_suffix(".json")
-            if twin.exists():
-                data = json.loads(twin.read_text(encoding="utf-8"))
-            else:
-                blob = path.read_bytes()
-                if blob[:4] != b"FBK1":
-                    return ""
-                payload = blob[5:]
-                if blob[4] & 1:
-                    payload = zlib.decompress(payload)
-                data = json.loads(payload.decode("utf-8"))
-        else:
+        suffix = path.suffix.lower()
+        if suffix == ".json":
+            return _title_in(_head_text(path, 65536))
+        if suffix != ".fbk":
             return ""
+        twin = path.with_suffix(".json")
+        if twin.is_file() and twin.stat().st_size <= 65536:
+            return _title_in(_head_text(twin, 65536))
+        with path.open("rb") as handle:
+            blob = handle.read(65536)
+        if len(blob) < 5 or blob[:4] != b"FBK1":
+            return ""
+        payload = blob[5:]
+        if blob[4] & 1:
+            payload = zlib.decompressobj().decompress(payload, 16384)
+        else:
+            payload = payload[:16384]
+        return _title_in(payload.decode("utf-8", "replace"))
     except Exception:
         return ""
-    return str(data.get("title") or "")
+
+
+def _head_text(path: Path, limit: int) -> str:
+    with path.open("rb") as handle:
+        return handle.read(limit).decode("utf-8", "replace")
+
+
+def _title_in(text: str) -> str:
+    match = _TITLE.search(text)
+    if not match:
+        return ""
+    try:
+        return str(json.loads('"' + match.group(1) + '"'))
+    except ValueError:
+        return ""
 
 
 def official_ids(catalog: dict) -> set[str]:
