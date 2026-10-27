@@ -1,11 +1,11 @@
 [project]
 name = "foolcourse"
-version = "1.0.1r2"
+version = "1.0.2"
 description = "Course catalog that opens books in Foolbook"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "foolbook @ git+https://github.com/squirelworks/Foolbook.git@133901702e59be1543e81f04a27bbf8a9ed0fb4f",
+    "foolbook @ git+https://github.com/squirelworks/Foolbook.git@5ba83a5574cf7771b4ee0f56b8af18765a4588d3",
 ]
 
 [project.urls]

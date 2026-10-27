@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 1.0.2
 
-- The NIDA curriculum is no longer part of this repo. A curriculum file names the official list. A menu only supplies subjects, modules, and titles.
-- The catalog window opens to most of the screen the first time, then reopens at the size and column dividers you left it at.
+- One program to start, not a script. Windows is `Foolcourse.exe`. Linux and macOS are `Foolcourse`.
+- Windows, Linux, and macOS folders. Unzip and double-click that program. Python is inside the folder. The sample courses, including Filing taxes for 2026, are already in `courses`.
+- Depends on Foolbook 5ba83a5. A click on a button's label presses the button.
 
 ## 1.0.1r2
 

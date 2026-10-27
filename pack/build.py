@@ -205,7 +205,7 @@ def build_one(key: str) -> Path:
         print(f"wheel {wheel.name}", flush=True)
         unpack_wheel(wheel, app)
     copy_tree(ROOT / "foolcourse", app / "foolcourse")
-    for name in ("foolbook", "engine", "viewer", "progress", "menu", "modules"):
+    for name in ("foolbook", "engine", "viewer", "progress", "menu", "modules", "toolbook"):
         found = foolbook / name
         if found.is_dir():
             copy_tree(found, app / name)
@@ -222,75 +222,48 @@ def build_one(key: str) -> Path:
         shutil.copy2(path, curriculum / path.name)
 
     courses = folder / "courses"
-    courses.mkdir()
-    crlf = spec["kind"] == "windows"
-    write_text(courses / "PUT COURSES HERE.txt", """Put the course files in this folder.
-
-A .tbk or .fbk can sit here, or in a folder inside this one.
-If a course opens another book, put that file in here too.
-""", crlf=crlf)
-    _launchers(folder, spec)
+    if courses.exists():
+        shutil.rmtree(courses)
+    sample = ROOT / "_courses"
+    if sample.is_dir() and any(sample.rglob("*.fbk")):
+        copy_tree(sample, courses)
+    else:
+        courses.mkdir()
+    _launchers(folder, spec, key)
     return zip_dir(folder, archive) or archive
 
 
-def _launchers(folder: Path, spec: dict) -> None:
-    kind = spec["kind"]
-    if kind == "windows":
-        write_text(folder / "Foolcourse.bat", """@echo off
-cd /d "%~dp0"
-set "FOOLCOURSE_HOME=%~dp0"
-set "PYTHONPATH=%~dp0app"
-start "" "%~dp0python\\pythonw.exe" -m foolcourse
-""", crlf=True)
-        write_text(folder / "Foolcourse-console.bat", """@echo off
-cd /d "%~dp0"
-set "FOOLCOURSE_HOME=%~dp0"
-set "PYTHONPATH=%~dp0app"
-"%~dp0python\\python.exe" -m foolcourse
-if errorlevel 1 pause
-""", crlf=True)
-        write_text(folder / "START.txt", """Foolcourse
+def _launchers(folder: Path, spec: dict, key: str) -> None:
+    """One program. Windows is Foolcourse.exe. The others are Foolcourse."""
+    name = "Foolcourse.exe" if spec["kind"] == "windows" else "Foolcourse"
+    src = ROOT / "pack" / "launchers" / key / name
+    if not src.is_file():
+        raise SystemExit(f"missing {src}. The release starts from that program, not a script.")
+    dest = folder / name
+    shutil.copy2(src, dest)
+    dest.chmod(dest.stat().st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
+    note = {
+        "windows": """Foolcourse 1.0.2
 
-1. Unzip this whole folder. Do not run it from inside the zip.
-2. The courses go in the courses folder. If they are already there, leave them.
-3. Double-click Foolcourse.bat.
-4. Click a course to open it.
+Unzip this whole folder. Do not run it from inside the zip.
+Double-click Foolcourse.exe.
+The courses are already in the courses folder.
+""",
+        "mac": """Foolcourse 1.0.2
 
-It remembers the courses folder. To add a course later, put the file in courses and click Refresh.
+Unzip this whole folder. Do not run it from inside the zip.
+Double-click Foolcourse.
+If macOS says it cannot be opened, right-click Foolcourse, choose Open, then Open again. This copy is not signed with Apple.
+The courses are already in the courses folder.
+""",
+        "unix": """Foolcourse 1.0.2
 
-If the window does not open, double-click Foolcourse-console.bat and leave that window up.
-""", crlf=True)
-        return
-    script = """#!/bin/sh
-cd "$(dirname "$0")" || exit 1
-export FOOLCOURSE_HOME="$PWD"
-export PYTHONPATH="$PWD/app"
-exec "$PWD/python/bin/python3" -m foolcourse
-"""
-    write_text(folder / "Foolcourse.sh", script, executable=True)
-    if kind == "mac":
-        write_text(folder / "Foolcourse.command", script, executable=True)
-        write_text(folder / "START.txt", """Foolcourse
-
-1. Unzip this whole folder. Do not run it from inside the zip.
-2. The courses go in the courses folder. If they are already there, leave them.
-3. Double-click Foolcourse.command.
-4. Click a course to open it.
-
-If macOS says it cannot be opened, right-click Foolcourse.command, choose Open, then Open again. This copy is not signed with Apple.
-
-It remembers the courses folder. To add a course later, put the file in courses and click Refresh.
-""")
-        return
-    write_text(folder / "START.txt", """Foolcourse
-
-1. Unzip this whole folder. Do not run it from inside the zip.
-2. The courses go in the courses folder. If they are already there, leave them.
-3. Open a terminal in this folder and run: ./Foolcourse.sh
-4. Click a course to open it.
-
-It remembers the courses folder. To add a course later, put the file in courses and click Refresh.
-""")
+Unzip this whole folder. Do not run it from inside the zip.
+Double-click Foolcourse, or in a terminal run: ./Foolcourse
+The courses are already in the courses folder.
+""",
+    }[spec["kind"]]
+    write_text(folder / "START.txt", note, crlf=spec["kind"] == "windows")
 
 
 def main(argv: list[str] | None = None) -> int:
