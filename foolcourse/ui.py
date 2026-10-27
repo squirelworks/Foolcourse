@@ -60,13 +60,29 @@ def _find_foolbook() -> Path | None:
     return None
 
 
+def _sibling_foolbook() -> Path | None:
+    """The Foolbook checkout beside this one. A pull there has to be the one that runs."""
+    here = Path(__file__).resolve().parents[1]
+    for candidate in (
+        here.parent / "Foolbook" / "foolbook.py",
+        here.parent / "foolbook" / "foolbook.py",
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
 def _foolbook_cmd(book: str, course: str, student: str) -> list[str] | None:
     """Start Foolbook with this same interpreter.
 
-    A portable Windows copy has Foolbook on PYTHONPATH, so -m foolbook
-    works. A source checkout falls back to the file beside this program.
+    The checkout next to Foolcourse wins. An older copy installed in the
+    venv was opening the book and ignoring the Foolbook you just pulled.
+    A portable copy has no sibling, so it still uses the installed package.
     """
     tail = [book, "--course", course, "--student", student]
+    sibling = _sibling_foolbook()
+    if sibling is not None:
+        return [sys.executable, str(sibling), *tail]
     try:
         import foolbook  # noqa: F401
         return [sys.executable, "-m", "foolbook", *tail]
