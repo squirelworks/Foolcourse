@@ -91,6 +91,7 @@ def _from_folders(root: Path) -> dict:
     tree: dict[str, dict[str, list[dict]]] = {}
     if not root.exists():
         return {"title": "Foolcourse", "root": str(root), "subjects": []}
+    listings: dict[Path, dict[str, dict]] = {}
     for book in sorted(root.rglob("*")):
         if not book.is_file() or book.suffix.lower() not in BOOK_EXTS:
             continue
@@ -117,14 +118,37 @@ def _from_folders(root: Path) -> dict:
         else:
             subject, module = "Courses", "Courses"
         course_id = book.stem
-        title = _book_title(book) or course_id
-        tree.setdefault(subject, {}).setdefault(module, []).append({
+        listed = _listed(book.parent, listings).get(book.name) or {}
+        title = str(listed.get("title") or "") or _book_title(book) or course_id
+        course = {
             "id": course_id,
             "title": title,
             "path": str(book),
             "official": False,
-        })
+        }
+        if isinstance(listed.get("pages"), int):
+            course["pages"] = listed["pages"]
+        tree.setdefault(subject, {}).setdefault(module, []).append(course)
     return _pack(root, tree)
+
+
+def _listed(folder: Path, listings: dict) -> dict[str, dict]:
+    """The folder's books.json, by file name. A published folder carries one.
+
+    It names each book's title, file, and page count. A folder without one,
+    or with one that does not read, is listed from the books themselves.
+    """
+    if folder not in listings:
+        books = {}
+        try:
+            data = json.loads((folder / "books.json").read_text(encoding="utf-8"))
+            for entry in data.get("books") or []:
+                if isinstance(entry, dict) and entry.get("file"):
+                    books[str(entry["file"])] = entry
+        except (OSError, ValueError, AttributeError):
+            pass
+        listings[folder] = books
+    return listings[folder]
 
 
 def _from_xml(root: Path, xml_path: Path) -> dict:
