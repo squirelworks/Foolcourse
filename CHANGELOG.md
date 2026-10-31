@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-31
+
+- A folder with a `books.json` (written by FoolbookEditor's Publish: title, file, page count) lists its books under those titles, with the page count. A folder without one, or with one that does not read, is listed from the books as before. `tests/test_books_json.py`.
+
 ## 1.0.2
 
 - One program to start, not a script. Windows is `Foolcourse.exe`. Linux and macOS are `Foolcourse`.
